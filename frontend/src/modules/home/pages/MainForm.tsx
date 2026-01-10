@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./mainform.css";
 import { ProductGrid } from "./ProductGrid";
+
 type Product = {
     id: number;
     name: string;
@@ -8,6 +9,7 @@ type Product = {
     region: string;
     weight: number;
 };
+
 function extractBrand(productName: string): string {
     const knownBrands = [
         "Beauty of Joseon",
@@ -34,7 +36,7 @@ export default function MainForm() {
         mail: ""
     });
 
-    // fetch 
+    // 🔄 FETCH PRODUKTÓW
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -61,24 +63,65 @@ export default function MainForm() {
         fetchProducts();
     }, []);
 
-    // marki produkty
+    // 🏷 MARKI
     const brands = Array.from(
         new Set(products.map(p => extractBrand(p.name)))
     );
 
-
-    // produkty marki danej
+    // 📦 PRODUKTY DANEJ MARKI
     const filteredProducts = products.filter(
         p => extractBrand(p.name) === chosenBrand
     );
 
+    // 🚀 SUBMIT – JEDEN POST NA KAŻDY PRODUKT
+    const handleSubmit = async () => {
+        try {
+            if (chosenProducts.length === 0) {
+                alert("Wybierz przynajmniej jeden produkt");
+                return;
+            }
+
+            for (const productId of chosenProducts) {
+                const product = products.find(p => p.id === productId);
+                if (!product) continue;
+
+                const response = await fetch(
+                    "https://unexchangeable-julio-acaroid.ngrok-free.dev/single_orders",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "ngrok-skip-browser-warning": "true"
+                        },
+                        body: JSON.stringify({
+                            productName: product.name,
+                            price: product.price,
+                            userEmail: userData.mail
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Błąd zapisu zamówienia");
+                }
+            }
+
+            alert("✅ Zamówienie zapisane!");
+            setChosenProducts([]);
+            setUserData({ name: "", surname: "", mail: "" });
+
+        } catch (err) {
+            console.error(err);
+            alert("❌ Błąd przy zapisie zamówienia");
+        }
+    };
 
     return (
         <div className="mainform-container">
             <div className="order-card">
                 <h2>Zbierz grupę i zamów już teraz!</h2>
 
-                {/* marka */}
+                {/* MARKA */}
                 <div className="selection-section">
                     <label>Marka:</label>
                     <select
@@ -97,42 +140,36 @@ export default function MainForm() {
                     </select>
                 </div>
 
-                {/*produkt*/}
+                {/* PRODUKTY */}
                 {chosenBrand && (
                     <div className="selection-section">
-                        <label>Wybierz produkt:</label>
-                        <ProductGrid 
-                            products={filteredProducts} 
-                            selectedIds={chosenProducts} 
-                            onSelect={(id) => 
-                                {
-                                    if(chosenProducts.includes(id)){
-                                        setChosenProducts(chosenProducts.filter((i) => i != id));
-                                    }
-                                    else{
-                                        setChosenProducts([...chosenProducts,id]);
-                                    }
-                                    }} 
+                        <label>Wybierz produkty:</label>
+                        <ProductGrid
+                            products={filteredProducts}
+                            selectedIds={chosenProducts}
+                            onSelect={(id) => {
+                                if (chosenProducts.includes(id)) {
+                                    setChosenProducts(chosenProducts.filter(i => i !== id));
+                                } else {
+                                    setChosenProducts([...chosenProducts, id]);
+                                }
+                            }}
                         />
                     </div>
                 )}
 
-                {/*form*/}
-                {chosenProducts && (
+                {/* FORMULARZ */}
+                {chosenProducts.length > 0 && (
                     <div className="user-details-form">
                         <hr />
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                console.log({
-                                    productId: chosenProducts,
-                                    userData
-                                });
+                                handleSubmit();
                             }}
                         >
                             <label>Imię</label>
                             <input
-                                name="name"
                                 value={userData.name}
                                 onChange={(e) =>
                                     setUserData({ ...userData, name: e.target.value })
@@ -141,7 +178,6 @@ export default function MainForm() {
 
                             <label>Nazwisko</label>
                             <input
-                                name="surname"
                                 value={userData.surname}
                                 onChange={(e) =>
                                     setUserData({ ...userData, surname: e.target.value })
@@ -151,7 +187,6 @@ export default function MainForm() {
                             <label>Email</label>
                             <input
                                 type="email"
-                                name="mail"
                                 value={userData.mail}
                                 onChange={(e) =>
                                     setUserData({ ...userData, mail: e.target.value })
