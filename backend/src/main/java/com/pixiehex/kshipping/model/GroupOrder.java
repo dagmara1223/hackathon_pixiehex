@@ -24,8 +24,10 @@ public class GroupOrder {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "GROUP_ORDER_ID")
     private Long groupOrderId;
+
 
     @OneToMany(mappedBy = "groupOrder", cascade = CascadeType.ALL)
     private List<SingleOrder> singleOrders;
