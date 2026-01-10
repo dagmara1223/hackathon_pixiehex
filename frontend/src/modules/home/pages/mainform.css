@@ -1,0 +1,99 @@
+/* Kontener główny */
+.mainform-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Karta formularza */
+.order-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 450px;
+}
+
+h2 {
+    color: #2d3436;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Stylizacja sekcji wyboru (selecty) */
+.selection-section {
+    margin-bottom: 20px;
+}
+
+.selection-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #636e72;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #dfe6e9;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    border-color: #0984e3;
+    outline: none;
+    background-color: #fff;
+}
+
+/* Formularz z danymi użytkownika */
+.user-details-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.user-details-form label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #2d3436;
+    margin-bottom: -10px; /* przybliżenie etykiety do inputa */
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 25px 0;
+}
+
+/* Przycisk na końcu */
+.submit-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background-color: #00b894;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #00947a;
+}
