@@ -27,7 +27,10 @@ public class GroupOrder {
     public enum GroupStatus {
         PENDING,
         READY_TO_SHIP,
-        SHIPPED
+        SHIPPED,
+        ON_THE_WAY,
+        ARRIVED_AT_HUB,
+        DELIVERED_TO_USERS
     }
 
     public GroupOrder() {}

@@ -1,5 +1,6 @@
 package com.pixiehex.kshipping.services;
 
+import com.pixiehex.kshipping.dto.CreateOrderRequest;
 import com.pixiehex.kshipping.model.SingleOrder;
 import com.pixiehex.kshipping.model.SingleOrder.OrderStatus;
 import com.pixiehex.kshipping.repository.SingleOrderRepository;
@@ -21,7 +22,38 @@ public class SingleOrderService {
         this.orderRepository = orderRepository;
     }
 
-    public SingleOrder createPreorder(String productName, double price, double weight, String userEmail, String shippingAddress) {
+    @Transactional
+    public List<SingleOrder> createBulkOrders(CreateOrderRequest request) {
+        List<SingleOrder> savedOrders = new java.util.ArrayList<>();
+
+        for (CreateOrderRequest.ProductItem item : request.getItems()) {
+
+            // Logika tworzenia pojedynczego zamówienia (kopiuj-wklej z createPreorder lub wywołaj tamtą metodę)
+            SingleOrder order = new SingleOrder();
+            order.setProductName(item.getProductName());
+            order.setOriginalPrice(item.getPrice());
+            order.setProductWeight(item.getWeight());
+
+            // Przypisujemy dane użytkownika (te same dla każdego produktu)
+            order.setUserEmail(request.getUserEmail());
+            order.setShippingAddress(request.getShippingAddress());
+            order.setPhoneNumber(request.getPhoneNumber());
+
+            // Wyliczamy zaliczkę
+            double deposit = item.getPrice() * 0.30;
+            order.setDepositAmount(deposit);
+            order.setRemainingToPay(0);
+
+            order.setStatus(OrderStatus.OPEN);
+            order.setOrderDate(LocalDateTime.now());
+
+            savedOrders.add(orderRepository.save(order));
+        }
+
+        return savedOrders;
+    }
+
+    public SingleOrder createPreorder(String productName, double price, double weight, String userEmail, String shippingAddress, String phoneNumber) {
 
         double deposit = price * 0.30;
 
@@ -32,6 +64,7 @@ public class SingleOrderService {
         order.setOriginalPrice(price);
         order.setProductWeight(weight); // Zakładam, że wagę też przesyłasz
         order.setDepositAmount(deposit);
+        order.setPhoneNumber(phoneNumber);
         order.setRemainingToPay(0);
         order.setStatus(OrderStatus.OPEN);
         order.setOrderDate(LocalDateTime.now());

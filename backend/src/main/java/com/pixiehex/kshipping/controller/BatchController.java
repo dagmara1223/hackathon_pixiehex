@@ -3,6 +3,7 @@ package com.pixiehex.kshipping.controller;
 import com.pixiehex.kshipping.model.GroupOrder;
 import com.pixiehex.kshipping.repository.GroupOrderRepository;
 import com.pixiehex.kshipping.services.BatchService;
+import com.pixiehex.kshipping.services.PdfGeneratorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +16,14 @@ public class BatchController {
 
     private final BatchService batchService;
     private final GroupOrderRepository groupOrderRepository;
+    private final PdfGeneratorService pdfGeneratorService;
 
-    public BatchController(BatchService batchService, GroupOrderRepository groupOrderRepository) {
+    public BatchController(BatchService batchService, GroupOrderRepository groupOrderRepository, PdfGeneratorService pdfGeneratorService) {
         this.batchService = batchService;
         this.groupOrderRepository = groupOrderRepository;
+        this.pdfGeneratorService = pdfGeneratorService;
     }
 
-    // --- 1. CZERWONY PRZYCISK (Uruchamia logikę pakowania) ---
-    // Endpoint: POST http://localhost:8080/batch/run
     @PostMapping("/run")
     public ResponseEntity<String> runBatching() {
         // To wywołuje Twój algorytm + generowanie PDF
@@ -30,11 +31,24 @@ public class BatchController {
         return ResponseEntity.ok(result);
     }
 
-    // --- 2. LISTA PACZEK (Dla panelu admina, żeby pobrać PDFy) ---
-    // Endpoint: GET http://localhost:8080/batch/groups
     @GetMapping("/groups")
     public ResponseEntity<List<GroupOrder>> getAllGroups() {
-        // Zwracamy listę wszystkich utworzonych paczek
         return ResponseEntity.ok(groupOrderRepository.findAll());
+    }
+
+    @PostMapping("/{id}/labels")
+    public ResponseEntity<String> generateLabels(@PathVariable Long id) {
+        return groupOrderRepository.findById(id)
+                .map(group -> {
+                    // Generujemy plik na żądanie
+                    pdfGeneratorService.generateShippingLabels(group);
+
+                    // Automatycznie zmieniamy status na DELIVERED_TO_USERS? (Opcjonalnie)
+                    // group.setStatus(GroupOrder.GroupStatus.DELIVERED_TO_USERS);
+                    // groupOrderRepository.save(group);
+
+                    return ResponseEntity.ok("Etykiety wygenerowane! Pobierz plik: LABELS_" + group.getName().replace(" ", "_") + ".pdf");
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
