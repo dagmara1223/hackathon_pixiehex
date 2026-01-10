@@ -13,18 +13,13 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
 
-    public OrderRepository orderRepository;
-
-    public OrderController(OrderRepository orderRepository){
-        this.orderRepository = orderRepository;
-    }
     @GetMapping("/")
     public ResponseEntity<Object> getOrder() {
         return ResponseEntity.ok(new Order());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOrder() {
+    public ResponseEntity<Object> getOrderById() {
         return ResponseEntity.ok(new Order());
     }
 

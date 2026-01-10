@@ -16,7 +16,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getProduct() {
+    public ResponseEntity<Object> getProductById() {
         return ResponseEntity.ok(new Product());
     }
 

@@ -16,7 +16,7 @@ public class GroupOrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getGroupOrder() {
+    public ResponseEntity<Object> getGroupOrderById() {
         return ResponseEntity.ok(new GroupOrder());
     }
 
