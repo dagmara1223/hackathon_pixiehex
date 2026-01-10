@@ -2,6 +2,7 @@ package com.pixiehex.kshipping.controller;
 
 import com.pixiehex.kshipping.model.Order;
 import com.pixiehex.kshipping.model.Order;
+import com.pixiehex.kshipping.repository.OrderRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/Order")
 public class OrderController {
+
+    public OrderRepository orderRepository;
+
+    public OrderController(OrderRepository orderRepository){
+        this.orderRepository = orderRepository;
+    }
     @GetMapping("/")
     public ResponseEntity<Object> getOrder() {
         return ResponseEntity.ok(new Order());

@@ -15,6 +15,6 @@ public class Order {
     private int orderId;
     @NotNull
     private int customerId;
-    @NotEmpty("Product list cannot be empty")
+    @NotEmpty(message = "Product list cannot be empty")
     private List<Product> products;
 }
