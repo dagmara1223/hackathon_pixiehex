@@ -4,6 +4,7 @@ C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pix
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\controller\GroupOrderController.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\controller\PhotoController.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\controller\ProductController.java
+C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\controller\ReportController.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\controller\SingleOrderController.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\dto\LoginRequest.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\exceptions\ExceptionsHandler.java
@@ -20,7 +21,10 @@ C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pix
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\ClientDetailsService.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\ClientService.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\GroupOrderService.java
+C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\PdfGeneratorService.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\PhotoService.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\ProductService.java
+C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\ReportService.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\SingleOrderService.java
+C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\services\WeeklyTaskScheduler.java
 C:\Users\natal\OneDrive\Desktop\hackathon_pixiehex\backend\src\main\java\com\pixiehex\kshipping\WebSecurityConfig.java
