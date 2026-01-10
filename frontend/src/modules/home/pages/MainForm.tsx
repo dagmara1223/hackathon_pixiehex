@@ -1,69 +1,170 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./mainform.css";
-const brands = ['b1', 'b2', 'b3', 'b4', 'b5'];
-const products = ['p1', 'p2', 'p3', 'p4']
+
+type Product = {
+    id: number;
+    name: string;
+    price: number;
+    region: string;
+    weight: number;
+};
+function extractBrand(productName: string): string {
+    const knownBrands = [
+        "Beauty of Joseon",
+        "COSRX",
+        "Dr. Althea",
+        "I’m From",
+        "Round Lab"
+    ];
+
+    const found = knownBrands.find((brand) =>
+        productName.startsWith(brand)
+    );
+
+    return found ?? "Inne";
+}
+
 export default function MainForm() {
+    const [products, setProducts] = useState<Product[]>([]);
     const [chosenBrand, setChosenBrand] = useState("");
-    const [chosenProduct, setChosenProduct] = useState("");
-    const [userData, setUserData] = useState({ name: "", surname: "", mail: "" });
-    const [errors, setErrors] = useState({});
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserData({ ...userData, [e.target.name]: e.target.value });
-    };
+    const [chosenProduct, setChosenProduct] = useState<number | "">("");
+    const [userData, setUserData] = useState({
+        name: "",
+        surname: "",
+        mail: ""
+    });
 
-    let selectBrands = <select id="brands" name="brands" onChange={(e) => {
-        setChosenBrand(e.target.value);
-    }}>
-        <option value="">--Wybierz markę--</option>
-        {brands.map(b => (
-            <option key={b} value={b}>{b}</option>
-        ))}</select>
-    let selectProduct;
-    if (chosenBrand) {
-        selectProduct = <div className="selection-section">
-            <label>Produkt:</label><select id="products" name="products" onChange={(e) => {
-                setChosenProduct(e.target.value);
-            }}>
-                <option value="">--Wybierz product--</option>
-                {products.map(b => (
-                    <option key={b} value={b}>{b}</option>
-                ))}</select></div>
-    }
-    else {
-        selectProduct = null;
-    }
-    let form;
-    if (chosenProduct && chosenBrand) {
-        form =
-            <div className="user-details-form">
-                <hr />
-                <form>
-                    <label htmlFor="name">Imię</label>
-                    <input type="text" id="name" name="name" placeholder="Wpisz swoje imie..." />
-                    <label htmlFor="surname">Nazwisko</label>
-                    <input type="text" id="surname" name="surname" placeholder="Wpisz swoje nazwisko..." />
-                    <label htmlFor="mail">E-Mail</label>
-                    <input type="email" id="mail" name="mail" placeholder="Wpisz swój mail..." />
-                </form>
-                <button type="submit" className="submit-btn">Potwierdź zamówienie</button>
+    // fetch 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch(
+                    "https://unexchangeable-julio-acaroid.ngrok-free.dev/products",
+                    {
+                        headers: {
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Błąd pobierania produktów");
+                }
+
+                const data = await response.json();
+                setProducts(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    // marki produkty
+    const brands = Array.from(
+        new Set(products.map(p => extractBrand(p.name)))
+    );
+
+
+    // produkty marki danej
+    const filteredProducts = products.filter(
+        p => extractBrand(p.name) === chosenBrand
+    );
+
+
+    return (
+        <div className="mainform-container">
+            <div className="order-card">
+                <h2>Zbierz grupę i zamów już teraz!</h2>
+
+                {/* marka */}
+                <div className="selection-section">
+                    <label>Marka:</label>
+                    <select
+                        value={chosenBrand}
+                        onChange={(e) => {
+                            setChosenBrand(e.target.value);
+                            setChosenProduct("");
+                        }}
+                    >
+                        <option value="">--Wybierz markę--</option>
+                        {brands.map((brand) => (
+                            <option key={brand} value={brand}>
+                                {brand}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/*produkt*/}
+                {chosenBrand && (
+                    <div className="selection-section">
+                        <label>Produkt:</label>
+                        <select
+                            value={chosenProduct}
+                            onChange={(e) =>
+                                setChosenProduct(Number(e.target.value))
+                            }
+                        >
+                            <option value="">--Wybierz produkt--</option>
+                            {filteredProducts.map((product) => (
+                                <option key={product.id} value={product.id}>
+                                    {product.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+
+                {/*form*/}
+                {chosenProduct && (
+                    <div className="user-details-form">
+                        <hr />
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                console.log({
+                                    productId: chosenProduct,
+                                    userData
+                                });
+                            }}
+                        >
+                            <label>Imię</label>
+                            <input
+                                name="name"
+                                value={userData.name}
+                                onChange={(e) =>
+                                    setUserData({ ...userData, name: e.target.value })
+                                }
+                            />
+
+                            <label>Nazwisko</label>
+                            <input
+                                name="surname"
+                                value={userData.surname}
+                                onChange={(e) =>
+                                    setUserData({ ...userData, surname: e.target.value })
+                                }
+                            />
+
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                name="mail"
+                                value={userData.mail}
+                                onChange={(e) =>
+                                    setUserData({ ...userData, mail: e.target.value })
+                                }
+                            />
+
+                            <button type="submit" className="submit-btn">
+                                Potwierdź zamówienie
+                            </button>
+                        </form>
+                    </div>
+                )}
             </div>
-    }
-    else {
-        form = null;
-    }
-
-    return <div className="mainform-container">
-        <div className="order-card">
-            <h2>Zbierz grupę i zamów już teraz!</h2>
-
-            <div className="selection-section">
-                <label>Marka:</label>
-                {selectBrands}
-            </div>
-
-            {selectProduct}
-
-            {form}
         </div>
-    </div>
+    );
 }
