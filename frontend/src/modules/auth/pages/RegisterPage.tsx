@@ -1,7 +1,7 @@
-import RegisterFrom from "../components/RegisterForm";
+import RegisterForm from "../components/RegisterForm";
 function RegisterPage(){
     return <div>
-        <RegisterFrom></RegisterFrom>
+        <RegisterForm></RegisterForm>
     </div>;
 }
 

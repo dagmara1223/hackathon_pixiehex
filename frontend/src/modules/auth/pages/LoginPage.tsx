@@ -1,8 +1,8 @@
-import LoginFrom from "../components/LoginForm";
+import LoginForm from "../components/LoginForm";
 
 function LoginPage(){
     return <div>
-        <LoginFrom></LoginFrom>
+        <LoginForm></LoginForm>
     </div>;
 }
 
