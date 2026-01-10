@@ -4,6 +4,7 @@ import com.pixiehex.kshipping.model.GroupOrder;
 import com.pixiehex.kshipping.repository.GroupOrderRepository;
 import com.pixiehex.kshipping.services.BatchService;
 import com.pixiehex.kshipping.services.PdfGeneratorService;
+import com.pixiehex.kshipping.services.SingleOrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,16 +18,19 @@ public class BatchController {
     private final BatchService batchService;
     private final GroupOrderRepository groupOrderRepository;
     private final PdfGeneratorService pdfGeneratorService;
+    private final SingleOrderService singleOrderService;
 
-    public BatchController(BatchService batchService, GroupOrderRepository groupOrderRepository, PdfGeneratorService pdfGeneratorService) {
+    public BatchController(BatchService batchService, GroupOrderRepository groupOrderRepository, PdfGeneratorService pdfGeneratorService, SingleOrderService singleOrderService) {
         this.batchService = batchService;
         this.groupOrderRepository = groupOrderRepository;
         this.pdfGeneratorService = pdfGeneratorService;
+        this.singleOrderService = singleOrderService;
     }
 
     @PostMapping("/run")
     public ResponseEntity<String> runBatching() {
         // To wywołuje Twój algorytm + generowanie PDF
+        singleOrderService.changeUnpaidToCancelled();
         String result = batchService.processBatching();
         return ResponseEntity.ok(result);
     }
