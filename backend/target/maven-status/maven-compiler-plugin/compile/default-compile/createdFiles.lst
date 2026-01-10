@@ -3,6 +3,7 @@ com\pixiehex\kshipping\model\Client.class
 com\pixiehex\kshipping\model\GroupOrder.class
 com\pixiehex\kshipping\controller\GroupOrderController.class
 com\pixiehex\kshipping\repository\ProductRepository.class
+com\pixiehex\kshipping\services\ProductService.class
 com\pixiehex\kshipping\exceptions\ExceptionsHandler.class
 com\pixiehex\kshipping\model\SingleOrder.class
 com\pixiehex\kshipping\repository\GroupOrderRepository.class
