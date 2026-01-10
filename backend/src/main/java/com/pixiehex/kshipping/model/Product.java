@@ -57,6 +57,9 @@ public class Product {
         this.region = region;
     }
 
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
     @NotEmpty @NotBlank
     private String name;
     @DecimalMin("0.1")
@@ -64,4 +67,5 @@ public class Product {
     @DecimalMin("0.1")
     private float weight;
     private String region;
+    private String type;
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/group_order")
+@CrossOrigin(origins = "*")
 public class GroupOrderController {
     private final GroupOrderService groupOrderService = new GroupOrderService();
     @GetMapping
