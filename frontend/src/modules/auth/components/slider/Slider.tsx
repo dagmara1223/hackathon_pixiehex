@@ -31,6 +31,10 @@ export default function Slider() {
 
     return (
         <div className="slider">
+            <div className="slider__bubble">
+                Koniec z drogimi przesyłkami z Korei! <br></br>
+Zbierz się w grupę i zamówcie wspólnie taniej ! <br></br>✨
+            </div>
             <button className="slider__arrow slider__arrow--left" onClick={goPrev}>
                 ‹
             </button>

@@ -49,3 +49,40 @@
 .slider__arrow--right {
     right: 1rem;
 }
+
+.slider__bubble {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+
+    animation: float 7s ease-in-out infinite;
+    z-index: 10;
+    text-align: center;
+}
+
+/* „ogon” chmurki */
+.slider__bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid white;
+}
+
+@keyframes float {
+    0%   { transform: translate(-50%, 0); }
+    50%  { transform: translate(-50%, 300px); }
+    100% { transform: translate(-50%, 0); }
+}
