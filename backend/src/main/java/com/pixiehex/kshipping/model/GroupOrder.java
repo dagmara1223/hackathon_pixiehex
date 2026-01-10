@@ -1,5 +1,6 @@
 package com.pixiehex.kshipping.model;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -8,11 +9,12 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
+@Entity
 public class GroupOrder {
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int orderId;
+    private Long orderId;
     @NotEmpty(message="List of orders cannot be empty")
     private List<Order> products;
 }
