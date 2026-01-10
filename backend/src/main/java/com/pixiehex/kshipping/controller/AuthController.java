@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins="8")
+@CrossOrigin(origins="*")
 public class AuthController {
 
     private final ClientRepository clientRepository;
@@ -31,19 +31,25 @@ public class AuthController {
         if (clientRepository.findByMail(client.getMail()).isPresent()) {
             return "User already exists";
         }
+
         client.setPassword(passwordEncoder.encode(client.getPassword()));
+        client.setRole(Client.Role.USER); // ✅ default role
+
         clientRepository.save(client);
         return "User registered successfully";
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Client Client) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
+            System.out.println("Authenticating: " + loginRequest.getMail());
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(Client.getMail(), Client.getPassword())
+                    new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPassword())
             );
+            System.out.println("Authentication success: " + authentication.isAuthenticated());
             return ResponseEntity.ok("Login successful");
         } catch (AuthenticationException e) {
+            System.out.println("Authentication failed: " + e.getMessage());
             return ResponseEntity.status(401).body("Invalid email or password");
         }
     }
