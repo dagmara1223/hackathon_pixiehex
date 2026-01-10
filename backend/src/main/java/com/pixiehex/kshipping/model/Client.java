@@ -1,10 +1,7 @@
 package com.pixiehex.kshipping.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -35,6 +32,9 @@ public class Client {
         this.clientId = clientId;
     }
 
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
+
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,6 +43,13 @@ public class Client {
     private String mail;
     @NotNull
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public enum Role {
+        USER,
+        ADMIN
+    }
 
 }
 

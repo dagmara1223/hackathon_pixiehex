@@ -18,13 +18,14 @@ public class ClientDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String mail) {
         Client client = clientRepository.findByMail(mail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
         return User.builder()
                 .username(client.getMail())
                 .password(client.getPassword())
-                .roles("USER")
+                .roles(client.getRole().name()) // ✅ USER or ADMIN
                 .build();
     }
 }
