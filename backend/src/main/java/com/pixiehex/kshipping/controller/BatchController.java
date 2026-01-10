@@ -1,8 +1,10 @@
 package com.pixiehex.kshipping.controller;
 
 import com.pixiehex.kshipping.model.GroupOrder;
+import com.pixiehex.kshipping.model.SingleOrder; // <--- WAŻNY IMPORT DLA PĘTLI
 import com.pixiehex.kshipping.repository.GroupOrderRepository;
 import com.pixiehex.kshipping.services.BatchService;
+import com.pixiehex.kshipping.services.FakeEmailService; // <--- WAŻNY IMPORT
 import com.pixiehex.kshipping.services.PdfGeneratorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,22 +13,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/batch")
-@CrossOrigin(origins = "") // Odblokowuje dostęp dla Reacta
+@CrossOrigin(origins = "*")
 public class BatchController {
 
     private final BatchService batchService;
     private final GroupOrderRepository groupOrderRepository;
     private final PdfGeneratorService pdfGeneratorService;
+    private final FakeEmailService emailService; // <--- 1. NOWE POLE SERWISU
 
-    public BatchController(BatchService batchService, GroupOrderRepository groupOrderRepository, PdfGeneratorService pdfGeneratorService) {
+    public BatchController(BatchService batchService,
+                           GroupOrderRepository groupOrderRepository,
+                           PdfGeneratorService pdfGeneratorService,
+                           FakeEmailService emailService) {
         this.batchService = batchService;
         this.groupOrderRepository = groupOrderRepository;
         this.pdfGeneratorService = pdfGeneratorService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/run")
     public ResponseEntity<String> runBatching() {
-        // To wywołuje Twój algorytm + generowanie PDF
         String result = batchService.processBatching();
         return ResponseEntity.ok(result);
     }
@@ -40,14 +46,50 @@ public class BatchController {
     public ResponseEntity<String> generateLabels(@PathVariable Long id) {
         return groupOrderRepository.findById(id)
                 .map(group -> {
-                    // Generujemy plik na żądanie
                     pdfGeneratorService.generateShippingLabels(group);
-
-                    // Automatycznie zmieniamy status na DELIVERED_TO_USERS? (Opcjonalnie)
-                    // group.setStatus(GroupOrder.GroupStatus.DELIVERED_TO_USERS);
-                    // groupOrderRepository.save(group);
-
                     return ResponseEntity.ok("Etykiety wygenerowane! Pobierz plik: LABELS_" + group.getName().replace(" ", "_") + ".pdf");
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // <--- 3. NOWY ENDPOINT Z LOGIKĄ POWIADOMIEŃ
+    // Endpoint: PATCH http://localhost:8080/batch/1/status?newStatus=ON_THE_WAY
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<?> updateBatchStatus(@PathVariable Long id, @RequestParam String newStatus) {
+        return groupOrderRepository.findById(id)
+                .map(group -> {
+                    try {
+                        // Konwersja Stringa na Enum (np. "ON_THE_WAY")
+                        GroupOrder.GroupStatus status = GroupOrder.GroupStatus.valueOf(newStatus);
+                        group.setStatus(status);
+
+                        // --- LOGIKA POWIADOMIEŃ (TWÓJ KOD) ---
+                        if (status == GroupOrder.GroupStatus.ON_THE_WAY) {
+                            // Powiadamiamy wszystkich w grupie
+                            for (SingleOrder order : group.getOrders()) {
+                                emailService.sendEmail(
+                                        order.getUserEmail(),
+                                        "🚢 Paczka wypłynęła z Korei!",
+                                        "Twoje zamówienie (" + order.getProductName() + ") jest w drodze do Polski."
+                                );
+                            }
+                        } else if (status == GroupOrder.GroupStatus.DELIVERED_TO_USERS) {
+                            for (SingleOrder order : group.getOrders()) {
+                                emailService.sendEmail(
+                                        order.getUserEmail(),
+                                        "📦 Paczka doręczona!",
+                                        "Dziękujemy za zakupy w K-Shipping. Miłego używania!"
+                                );
+                            }
+                        }
+                        // ---------------------------------------
+
+                        groupOrderRepository.save(group);
+                        return ResponseEntity.ok("Status zmieniony na: " + status + ". Powiadomienia wysłane.");
+
+                    } catch (IllegalArgumentException e) {
+                        return ResponseEntity.badRequest().body("Błąd: Nieznany status '" + newStatus + "'");
+                    }
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

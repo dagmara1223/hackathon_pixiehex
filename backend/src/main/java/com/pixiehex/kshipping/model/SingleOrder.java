@@ -36,13 +36,12 @@ public class SingleOrder {
     private GroupOrder groupOrder;
 
     public enum OrderStatus {
-        OPEN, LOCKED, PAID, CANCELLED
+        OPEN, LOCKED, PAID, CANCELLED, ACCEPT
     }
 
     public SingleOrder() {
     }
 
-    // Zaktualizowany konstruktor
     public SingleOrder(String productName, String userEmail, String shippingAddress, double originalPrice, double depositAmount, OrderStatus status, String phoneNumber) {
         this.productName = productName;
         this.userEmail = userEmail;
@@ -55,7 +54,6 @@ public class SingleOrder {
         this.remainingToPay = 0.0;
     }
 
-    // --- GETTERY I SETTERY DLA ADRESU ---
     public String getShippingAddress() {
         return shippingAddress;
     }
