@@ -28,9 +28,12 @@ public class SingleOrderController {
     public ResponseEntity<SingleOrder> createPreorder(@RequestBody Map<String, Object> payload) {
         String name = (String) payload.get("productName");
         double price = Double.parseDouble(payload.get("price").toString());
-        String email = (String) payload.get("userEmail");
+        double weight = payload.containsKey("weight") ? Double.parseDouble(payload.get("weight").toString()) : 0.0;
 
-        return ResponseEntity.ok(singleOrderService.createPreorder(name, price, email));
+        String email = (String) payload.get("userEmail");
+        String address = (String) payload.get("shippingAddress");
+
+        return ResponseEntity.ok(singleOrderService.createPreorder(name, price, weight, email, address));
     }
 
     @DeleteMapping("/{id}")
