@@ -26,6 +26,9 @@ export default function Navbar() {
                 {userMail}
               </span>
             )}
+            <Link to="/orderhistory" className="navbar__button">
+            Historia zamówień
+            </Link>
             <Link to="/basket" className="navbar__button">
             Koszyk
             </Link>
