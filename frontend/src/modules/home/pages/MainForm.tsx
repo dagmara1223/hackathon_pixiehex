@@ -72,6 +72,42 @@ export default function MainForm() {
         p => extractBrand(p.name) === chosenBrand
     );
 
+    const handleSubmit = async () => {
+        try {
+            const selectedProduct = products.find(p => p.id === chosenProduct);
+            if (!selectedProduct) {
+                alert("Brak produktu");
+                return;
+            }
+
+            const response = await fetch(
+                "https://unexchangeable-julio-acaroid.ngrok-free.dev/single_orders",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                    body: JSON.stringify({
+                        productName: selectedProduct.name,
+                        price: selectedProduct.price,
+                        userEmail: userData.mail
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Nie udało się dodać zamówienia");
+            }
+
+            alert("✅ Zamówienie zapisane!");
+        } catch (err) {
+            console.error(err);
+            alert("❌ Błąd przy zapisie zamówienia");
+        }
+    };
+
+
 
     return (
         <div className="mainform-container">
@@ -124,12 +160,10 @@ export default function MainForm() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                console.log({
-                                    productId: chosenProduct,
-                                    userData
-                                });
+                                handleSubmit();
                             }}
                         >
+
                             <label>Imię</label>
                             <input
                                 name="name"
