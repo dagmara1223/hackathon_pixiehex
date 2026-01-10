@@ -1,0 +1,15 @@
+.deposit-btn {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.deposit-btn:hover {
+    opacity: 0.85;
+}
