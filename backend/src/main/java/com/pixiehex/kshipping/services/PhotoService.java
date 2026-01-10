@@ -1,5 +1,7 @@
 package com.pixiehex.kshipping.services;
 
+import jakarta.annotation.Resource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import java.io.InputStream;
 
 @Service
 public class PhotoService {
@@ -30,18 +34,16 @@ public class PhotoService {
     }
 
     public byte[] getPhoto(String filename) throws IOException {
-        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
-        Path filePath = uploadPath.resolve(filename).normalize();
+        String resourcePath = "photos/" + filename;
 
-        if (!filePath.startsWith(uploadPath)) {
-            throw new SecurityException("Invalid file path: potential path traversal attempt");
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                throw new IOException("File not found or not readable: " + filename);
+            }
+            return inputStream.readAllBytes();
         }
-
-        if (!Files.exists(filePath)) {
-            throw new IOException("File not found");
-        }
-        return Files.readAllBytes(filePath);
     }
+
 
     public String getContentType(String filename) throws IOException {
         Path filePath = Paths.get(uploadDir, filename);
