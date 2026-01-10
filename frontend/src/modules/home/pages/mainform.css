@@ -93,3 +93,15 @@ hr {
 .submit-btn:hover {
     background-color: lightgray;
 }
+
+.error-input {
+    border: 2px solid #ff7675 !important;
+    background-color: #fff5f5;
+}
+
+.error-text {
+    color: #d63031;
+    font-size: 0.8rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}

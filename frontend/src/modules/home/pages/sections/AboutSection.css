@@ -98,7 +98,10 @@
     transform: translateY(-2px);
     transition: transform 0.3s ease;
 }
-
+.about__card:hover{
+    transform: scale(1.03);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
 
 @media (max-width: 768px) {
     .about__cards {
