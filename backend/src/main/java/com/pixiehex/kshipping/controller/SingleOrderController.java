@@ -51,4 +51,10 @@ public class SingleOrderController {
         List<SingleOrder> lockedOrders = singleOrderService.closeCycleAndCalculateCosts();
         return ResponseEntity.ok(lockedOrders);
     }
+
+    @GetMapping("/by-email")
+    public ResponseEntity<List<SingleOrder>> getOrdersByEmail(@RequestParam String mail) {
+        List<SingleOrder> orders = singleOrderService.getOrdersByUserEmail(mail);
+        return ResponseEntity.ok(orders);
+    }
 }

@@ -72,4 +72,8 @@ public class SingleOrderService {
     public List<SingleOrder> getAllOrders() {
         return orderRepository.findAll();
     }
+
+    public List<SingleOrder> getOrdersByUserEmail(String userEmail) {
+        return orderRepository.findByUserEmail(userEmail);
+    }
 }
