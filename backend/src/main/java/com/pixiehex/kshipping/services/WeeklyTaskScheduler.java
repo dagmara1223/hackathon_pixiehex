@@ -16,10 +16,15 @@ public class WeeklyTaskScheduler {
         this.singleOrderService = singleOrderService;
     }
 
+    @Scheduled(cron = "0 0 0 * * SAT")
+    public void runWeeklyLocked() {
+        singleOrderService.changeToLocked();
+    }
+
     // Every Monday at 00:00
     @Scheduled(cron = "0 0 0 * * MON")
     public void runWeeklyBatching() {
-        batchService.processBatching();
         singleOrderService.changeUnpaidToCancelled();
+        batchService.processBatching();
     }
 }
