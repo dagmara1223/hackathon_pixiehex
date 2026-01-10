@@ -69,4 +69,14 @@ public class SingleOrderController {
         List<SingleOrder> createdOrders = singleOrderService.createBulkOrders(request);
         return ResponseEntity.ok(createdOrders);
     }
+
+    @PutMapping("/{id}/pay")
+    public ResponseEntity<SingleOrder> payOrder(@PathVariable Long id) {
+        try {
+            SingleOrder updatedOrder = singleOrderService.markOrderAsPaid(id);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
+        }
+    }
 }
