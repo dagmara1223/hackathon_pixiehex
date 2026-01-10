@@ -7,12 +7,12 @@ import java.util.List;
 @Entity
 public class GroupOrder {
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getGroupOrderId() {
+        return groupOrderId;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setGroupOrderId(Long orderId) {
+        this.groupOrderId = orderId;
     }
 
     public List<SingleOrder> getOrders() {
@@ -25,9 +25,9 @@ public class GroupOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long orderId;
+    private Long groupOrderId;
 
     @OneToMany(mappedBy = "groupOrder", cascade = CascadeType.ALL)
     private List<SingleOrder> singleOrders;
-
 }
+
