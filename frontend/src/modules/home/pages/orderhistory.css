@@ -96,7 +96,7 @@
 }
 
 /* Styl dla braku zamówień */
-h3 {
+.order-container h3 {
     text-align: center;
     color: #b2bec3;
     margin-top: 50px;
