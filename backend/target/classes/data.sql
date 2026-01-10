@@ -53,3 +53,5 @@ INSERT INTO product (id, region, weight, price, name, type) VALUES (52, 'South K
 INSERT INTO product (id, region, weight, price, name, type) VALUES (53, 'South Korea', 150, 93.99, 'I’m From Rice Cream', 'Cream');
 INSERT INTO product (id, region, weight, price, name, type) VALUES (54, 'South Korea', 100, 95.99, 'Dr. Althea Skin Relief Essence', 'Essence');
 INSERT INTO product (id, region, weight, price, name, type) VALUES (55, 'South Korea', 150, 74.99, 'Round Lab Birch Juice Toner', 'Toner');
+INSERT INTO group_order (name, total_weight, total_value, status, created_date)
+VALUES ('Initial Group', 0, 0, 'PENDING', CURRENT_TIMESTAMP);
