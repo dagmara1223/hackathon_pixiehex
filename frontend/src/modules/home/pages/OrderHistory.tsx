@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import "./orderhistory.css"
 type Order = {
     productName: string,
     userEmail: string,
@@ -63,21 +63,37 @@ export default function OrderHistory(){
     if(error) return <p style={{ color: 'red' }}>{error}</p>;   
     let ordersDiv;
     if(orders.length){
-            ordersDiv = orders.map(o => {
-            return <div className="order">
-                Nazwa produktu: {o.productName}
-                Oryginalna cena: {o.originalPrice}
-                Status: {o.status}
-                Cena Finalna: {o.finalPrice}
-                Waga: {o.productWeight}
-                Pozostało do zapłaty: {o.remainingToPay}
-            </div>;
-        });
+            ordersDiv = orders.map(o => (
+    <div className="order-card">
+        <div className="order-header">
+            <span className="product-name">{o.productName}</span>
+            <span className={`status-badge ${o.status.toLowerCase()}`}>{o.status}</span>
+        </div>
+        <div className="order-details">
+            <div className="detail-item">
+                <span className="label">Oryginalna cena:</span>
+                <span className="value">{o.originalPrice} zł</span>
+            </div>
+            <div className="detail-item">
+                <span className="label">Waga:</span>
+                <span className="value">{o.productWeight} kg</span>
+            </div>
+            <div className="detail-item final-price">
+                <span className="label">Cena Finalna:</span>
+                <span className="value">{o.finalPrice} zł</span>
+            </div>
+            <div className="detail-item remaining">
+                <span className="label">Do zapłaty:</span>
+                <span className="value">{o.remainingToPay} zł</span>
+            </div>
+        </div>
+    </div>
+));
     }
     else{
         ordersDiv = <h3>Nie masz u nas żadnych zamówień</h3>;
     }    
-    return <div>
+    return <div className="order-container">
         <h2>Historia Zamówień</h2>
         {ordersDiv}
     </div>;
