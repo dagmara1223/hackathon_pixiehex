@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins = "*") // <--- WAŻNE NA HACKATHON: Pozwala frontendowi (np. localhost:3000) gadać z backendem
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     private final ProductService productService;

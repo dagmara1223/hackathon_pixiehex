@@ -31,6 +31,10 @@ public class Client {
         this.password = password;
     }
 
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
+
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
