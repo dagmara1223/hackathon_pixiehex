@@ -10,11 +10,6 @@ export default function LoginForm() {
         e.preventDefault();
         setError("");
 
-        const loginData = {
-            mail: name,
-            password: password
-        };
-
         try {
             const response = await fetch('https://unexchangeable-julio-acaroid.ngrok-free.dev/auth/login', {
                 method: 'POST',
@@ -30,13 +25,12 @@ export default function LoginForm() {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log("Zalogowano pomyślnie!", data);
-
-                localStorage.setItem('token', data.token);
-
-                alert("Sukces!");
-            } else {
+                const text = await response.text();
+                console.log("LOGIN RESPONSE:", text);
+                alert("Zalogowano!");
+                return;
+            }
+            else {
                 const errorData = await response.json();
                 setError(errorData.message || "Błędny login lub hasło");
             }
