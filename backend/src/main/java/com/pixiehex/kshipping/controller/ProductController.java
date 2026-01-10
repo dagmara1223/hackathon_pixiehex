@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Object> getProduct() {
         return ResponseEntity.ok(new Product());
     }
@@ -20,7 +20,7 @@ public class ProductController {
         return ResponseEntity.ok(new Product());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Object> addProduct(@Valid @RequestBody Product product) {
         return ResponseEntity.ok(new Product());
     }
