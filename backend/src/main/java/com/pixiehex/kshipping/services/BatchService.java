@@ -15,6 +15,7 @@ public class BatchService {
 
     private final SingleOrderRepository singleOrderRepository;
     private final GroupOrderRepository groupOrderRepository;
+    private final FakeEmailService emailService;
 
     private final PdfGeneratorService pdfGeneratorService;
 
@@ -27,10 +28,12 @@ public class BatchService {
 
     public BatchService(SingleOrderRepository singleOrderRepository,
                         GroupOrderRepository groupOrderRepository,
-                        PdfGeneratorService pdfGeneratorService) {
+                        PdfGeneratorService pdfGeneratorService,
+                        FakeEmailService emailService) {
         this.singleOrderRepository = singleOrderRepository;
         this.groupOrderRepository = groupOrderRepository;
         this.pdfGeneratorService = pdfGeneratorService;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -126,15 +129,36 @@ public class BatchService {
 
         for (SingleOrder order : batch.getOrders()) {
             double weightShare = order.getProductWeight() / batchTotalWeight;
+
             double shippingForThisOrder = totalShippingCost * weightShare;
 
             double basePrice = order.getOriginalPrice();
             double totalWithTax = (basePrice + shippingForThisOrder) * VAT_RATE;
+
             double remaining = totalWithTax - order.getDepositAmount();
 
+            // --- 2. ZAPIS DO BAZY ---
             order.setFinalPrice(Math.round(totalWithTax * 100.0) / 100.0);
             order.setRemainingToPay(Math.round(remaining * 100.0) / 100.0);
-            order.setStatus(OrderStatus.LOCKED);
+            order.setStatus(OrderStatus.ACCEPT); // Blokujemy edycję
+
+            // --- 3. WYSYŁAMY FEJKOWEGO MAILA (Twoja część) ---
+            String subject = "🔔 K-Shipping: Dopłata do zamówienia (Batch " + batch.getId() + ")";
+
+            // Używam zmiennych z obiektu (order.getRemainingToPay), bo są już zaokrąglone
+            String body = String.format(
+                    "Cześć! Twoja grupa zebrała się sukcesem.\n" +
+                            "Produkt: %s\n" +
+                            "Kwota do dopłaty: %.2f PLN\n" +
+                            "Status: Oczekuje na wysyłkę z Korei.\n" +
+                            "Kliknij tutaj, aby opłacić: http://k-shipping.pl/pay/%d",
+                    order.getProductName(),
+                    order.getRemainingToPay(),
+                    order.getOrderId()
+            );
+
+            // Wywołujemy FakeService
+            emailService.sendEmail(order.getUserEmail(), subject, body);
         }
     }
 }
