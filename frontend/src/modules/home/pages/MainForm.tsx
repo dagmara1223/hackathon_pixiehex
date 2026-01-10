@@ -30,13 +30,18 @@ export default function MainForm() {
     const [products, setProducts] = useState<Product[]>([]);
     const [chosenBrand, setChosenBrand] = useState("");
     const [chosenProducts, setChosenProducts] = useState<number[]>([]);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [userData, setUserData] = useState({
         name: "",
-        surname: "",
-        mail: ""
+        mail: "",
+        address: "",
+        postal_code: "",
+        city: ""
     });
 
-    // 🔄 FETCH PRODUKTÓW
+    // fetch
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -63,18 +68,19 @@ export default function MainForm() {
         fetchProducts();
     }, []);
 
-    // 🏷 MARKI
+    // marki
     const brands = Array.from(
         new Set(products.map(p => extractBrand(p.name)))
     );
 
-    // 📦 PRODUKTY DANEJ MARKI
+    // produkty danej marki
     const filteredProducts = products.filter(
         p => extractBrand(p.name) === chosenBrand
     );
 
-    // 🚀 SUBMIT – JEDEN POST NA KAŻDY PRODUKT
-    const handleSubmit = async () => {
+    // submit
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
         try {
             if (chosenProducts.length === 0) {
                 alert("Wybierz przynajmniej jeden produkt");
@@ -108,7 +114,7 @@ export default function MainForm() {
 
             alert("✅ Zamówienie zapisane!");
             setChosenProducts([]);
-            setUserData({ name: "", surname: "", mail: "" });
+            setUserData({ name: "", mail: "", address: "", postal_code: "", city: "" });
 
         } catch (err) {
             console.error(err);
@@ -165,22 +171,15 @@ export default function MainForm() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                handleSubmit();
+                                setShowConfirmModal(true);
                             }}
                         >
-                            <label>Imię</label>
+
+                            <label>Imię i Nazwisko</label>
                             <input
                                 value={userData.name}
                                 onChange={(e) =>
                                     setUserData({ ...userData, name: e.target.value })
-                                }
-                            />
-
-                            <label>Nazwisko</label>
-                            <input
-                                value={userData.surname}
-                                onChange={(e) =>
-                                    setUserData({ ...userData, surname: e.target.value })
                                 }
                             />
 
@@ -192,6 +191,27 @@ export default function MainForm() {
                                     setUserData({ ...userData, mail: e.target.value })
                                 }
                             />
+                            <label>Adres</label>
+                            <input
+                                value={userData.address}
+                                onChange={(e) =>
+                                    setUserData({ ...userData, address: e.target.value })
+                                }
+                            />
+                            <label>Kod pocztowy</label>
+                            <input
+                                value={userData.postal_code}
+                                onChange={(e) =>
+                                    setUserData({ ...userData, postal_code: e.target.value })
+                                }
+                            />
+                            <label>Miasto</label>
+                            <input
+                                value={userData.city}
+                                onChange={(e) =>
+                                    setUserData({ ...userData, city: e.target.value })
+                                }
+                            />
 
                             <button type="submit" className="submit-btn">
                                 Potwierdź zamówienie
@@ -200,6 +220,51 @@ export default function MainForm() {
                     </div>
                 )}
             </div>
+            {showConfirmModal && (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h3>Potwierdzenie zamówienia</h3>
+
+                        <p>
+                            Finalna cena Twojego zamówienia zostanie wysłana na adres
+                            <strong> {userData.mail}</strong>, gdy grupa zakupowa
+                            zostanie skompletowana.
+                        </p>
+
+                        <p>
+                            Aby zarezerwować udział w zamówieniu, wymagana jest
+                            <strong> zaliczka 40 zł</strong>.
+                        </p>
+
+                        <p className="modal-small">
+                            Zaliczka jest bezzwrotna i zostanie odliczona od ceny końcowej.
+                        </p>
+
+                        <div className="modal-actions">
+                            <button
+                                className="modal-cancel"
+                                onClick={() => setShowConfirmModal(false)}
+                            >
+                                Anuluj
+                            </button>
+
+                            <button
+                                className="modal-confirm"
+                                disabled={isSubmitting}
+                                onClick={async () => {
+                                    setIsSubmitting(true);
+                                    await handleSubmit(new Event("submit") as any);
+                                    setIsSubmitting(false);
+                                    setShowConfirmModal(false);
+                                }}
+                            >
+                                {isSubmitting ? "Przetwarzanie..." : "Zapłać 40 zł"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
