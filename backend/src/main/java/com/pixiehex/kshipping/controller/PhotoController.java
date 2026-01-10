@@ -1,6 +1,8 @@
 package com.pixiehex.kshipping.controller;
 
+import com.pixiehex.kshipping.model.Product;
 import com.pixiehex.kshipping.services.PhotoService;
+import com.pixiehex.kshipping.services.ProductService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,14 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/photos")
 public class PhotoController {
 
     private final PhotoService photoService;
+    private final ProductService productService;
 
-    public PhotoController(PhotoService photoService) {
+    public PhotoController(PhotoService photoService, ProductService productService) {
         this.photoService = photoService;
+        this.productService = productService;
     }
 
     @PostMapping
@@ -29,9 +35,32 @@ public class PhotoController {
         }
     }
 
-    @GetMapping("/{filename}")
-    public ResponseEntity<byte[]> getPhoto(@PathVariable String filename) {
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getPhoto(@PathVariable Long id) {
         try {
+            Optional<Product> optionalProduct = productService.getProductById(id);
+            if (optionalProduct.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Product product = optionalProduct.get();
+
+            String filename;
+            switch (product.getType()) {
+                case "Serum":
+                    filename = "serum.jpg";
+                    break;
+                case "Cream":
+                    filename = "cream.png";
+                    break;
+                case "Toner":
+                    filename = "toner.png";
+                    break;
+                default:
+                    filename = "essence.png";
+                    break;
+            }
+
             byte[] photoBytes = photoService.getPhoto(filename);
             String contentType = photoService.getContentType(filename);
 
@@ -42,7 +71,8 @@ public class PhotoController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }
