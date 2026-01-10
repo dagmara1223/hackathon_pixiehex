@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./mainform.css";
-
+import { ProductGrid } from "./ProductGrid";
 type Product = {
     id: number;
     name: string;
@@ -27,7 +27,7 @@ function extractBrand(productName: string): string {
 export default function MainForm() {
     const [products, setProducts] = useState<Product[]>([]);
     const [chosenBrand, setChosenBrand] = useState("");
-    const [chosenProduct, setChosenProduct] = useState<number | "">("");
+    const [chosenProducts, setChosenProducts] = useState<number[]>([]);
     const [userData, setUserData] = useState({
         name: "",
         surname: "",
@@ -85,7 +85,7 @@ export default function MainForm() {
                         value={chosenBrand}
                         onChange={(e) => {
                             setChosenBrand(e.target.value);
-                            setChosenProduct("");
+                            setChosenProducts([]);
                         }}
                     >
                         <option value="">--Wybierz markę--</option>
@@ -100,32 +100,32 @@ export default function MainForm() {
                 {/*produkt*/}
                 {chosenBrand && (
                     <div className="selection-section">
-                        <label>Produkt:</label>
-                        <select
-                            value={chosenProduct}
-                            onChange={(e) =>
-                                setChosenProduct(Number(e.target.value))
-                            }
-                        >
-                            <option value="">--Wybierz produkt--</option>
-                            {filteredProducts.map((product) => (
-                                <option key={product.id} value={product.id}>
-                                    {product.name}
-                                </option>
-                            ))}
-                        </select>
+                        <label>Wybierz produkt:</label>
+                        <ProductGrid 
+                            products={filteredProducts} 
+                            selectedIds={chosenProducts} 
+                            onSelect={(id) => 
+                                {
+                                    if(chosenProducts.includes(id)){
+                                        setChosenProducts(chosenProducts.filter((i) => i != id));
+                                    }
+                                    else{
+                                        setChosenProducts([...chosenProducts,id]);
+                                    }
+                                    }} 
+                        />
                     </div>
                 )}
 
                 {/*form*/}
-                {chosenProduct && (
+                {chosenProducts && (
                     <div className="user-details-form">
                         <hr />
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
                                 console.log({
-                                    productId: chosenProduct,
+                                    productId: chosenProducts,
                                     userData
                                 });
                             }}
