@@ -16,7 +16,7 @@ INSERT INTO product (id, region, weight, price, name, type) VALUES (15, 'South K
 INSERT INTO product (id, region, weight, price, name, type) VALUES (16, 'South Korea', 100, 76.99, 'COSRX AHA 7 Whitehead Power Liquid', 'Toner');
 INSERT INTO product (id, region, weight, price, name, type) VALUES (17, 'South Korea', 150, 69.99, 'COSRX Full Fit Propolis Synergy Toner', 'Toner');
 INSERT INTO product (id, region, weight, price, name, type) VALUES (18, 'South Korea', 100, 82.99, 'COSRX Full Fit Propolis Light Ampoule', 'Serum');
-INSERT INTO product (id, region, weight, price, name, type) VALUES (19, 'South Korea', 70, 66.99, 'COSRX Acne Pimple Master Patch', 'Spot Care');
+INSERT INTO product (id, region, weight, price, name, type) VALUES (19, 'South Korea', 70, 66.99, 'COSRX Acne Pimple Master Patch', 'Cream');
 INSERT INTO product (id, region, weight, price, name, type) VALUES (20, 'South Korea', 150, 71.99, 'COSRX Hydrium Watery Toner', 'Toner');
 INSERT INTO product (id, region, weight, price, name, type) VALUES (21, 'South Korea', 50, 109.99, 'Dr. Althea 345 Relief Cream', 'Cream');
 INSERT INTO product (id, region, weight, price, name, type) VALUES (22, 'South Korea', 150, 96.99, 'Dr. Althea Azulene 147HA Intensive Soothing Cream', 'Cream');

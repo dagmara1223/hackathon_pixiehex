@@ -17,6 +17,8 @@ public class SingleOrder {
     private double depositAmount;
     private double finalPrice;
     private double remainingToPay;
+    private double productWeight;
+
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -47,6 +49,13 @@ public class SingleOrder {
         this.remainingToPay = 0.0;
     }
 
+    public double getProductWeight() {
+        return productWeight;
+    }
+
+    public void setProductWeight(double productWeight) {
+        this.productWeight = productWeight;
+    }
 
     public Long getOrderId() {
         return orderId;
