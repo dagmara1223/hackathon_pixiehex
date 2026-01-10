@@ -80,7 +80,7 @@ hr {
     margin-top: 20px;
     width: 100%;
     padding: 14px;
-    background-color: lightgray;
+    background-color: gray;
     color: white;
     border: none;
     border-radius: 8px;
@@ -91,5 +91,17 @@ hr {
 }
 
 .submit-btn:hover {
-    background-color: #00947a;
+    background-color: lightgray;
+}
+
+.error-input {
+    border: 2px solid #ff7675 !important;
+    background-color: #fff5f5;
+}
+
+.error-text {
+    color: #d63031;
+    font-size: 0.8rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
 }
