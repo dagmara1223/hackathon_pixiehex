@@ -1,20 +1,32 @@
 package com.pixiehex.kshipping.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 public class GroupOrder {
-    @NotNull
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<SingleOrder> getOrders() {
+        return singleOrders;
+    }
+
+    public void setOrders(List<SingleOrder> singleOrders) {
+        this.singleOrders = singleOrders;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long orderId;
-    @NotEmpty(message="List of orders cannot be empty")
-    private List<Order> products;
+
+    @OneToMany(mappedBy = "groupOrder", cascade = CascadeType.ALL)
+    private List<SingleOrder> singleOrders;
 }

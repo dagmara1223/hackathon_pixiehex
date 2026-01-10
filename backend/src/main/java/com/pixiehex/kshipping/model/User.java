@@ -10,6 +10,30 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class User {
+    public @NotNull Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(@NotNull Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public @Email String getMail() {
+        return mail;
+    }
+
+    public void setMail(@Email String mail) {
+        this.mail = mail;
+    }
+
+    public @NotNull String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotNull String password) {
+        this.password = password;
+    }
+
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

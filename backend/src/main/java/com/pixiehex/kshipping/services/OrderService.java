@@ -1,11 +1,11 @@
 package com.pixiehex.kshipping.services;
 
-import com.pixiehex.kshipping.repository.OrderRepository;
+import com.pixiehex.kshipping.repository.SingleOrderRepository;
 
 public class OrderService {
-    public OrderRepository orderRepository;
+    public SingleOrderRepository singleOrderRepository;
 
-    public OrderService(OrderRepository orderRepository){
-        this.orderRepository = orderRepository;
+    public OrderService(SingleOrderRepository singleOrderRepository){
+        this.singleOrderRepository = singleOrderRepository;
     }
 }
