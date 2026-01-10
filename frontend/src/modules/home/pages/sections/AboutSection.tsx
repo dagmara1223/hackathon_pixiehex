@@ -21,7 +21,7 @@ export default function AboutSection() {
 
                 {/*co nas wyroznia section */}
                 <div className="about__features">
-                    <h2>Co nas wyróżnia?</h2>
+                    <h2 className="about__title">Co nas wyróżnia?</h2>
 
                     <div className="about__cards">
                         <div className="about__card">
