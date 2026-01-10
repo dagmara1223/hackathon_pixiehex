@@ -1,19 +1,18 @@
-/* Kontener główny */
 .mainform-container {
     display: flex;
     justify-content: center;
     padding: 20px;
     font-family: 'Inter', sans-serif;
+    min-height: 90vh;
 }
 
-/* Karta formularza */
 .order-card {
     background: white;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 450px;
+    max-width: 400px;
 }
 
 h2 {
@@ -22,7 +21,6 @@ h2 {
     margin-bottom: 25px;
 }
 
-/* Stylizacja sekcji wyboru (selecty) */
 .selection-section {
     margin-bottom: 20px;
 }
@@ -51,7 +49,6 @@ select:focus {
     background-color: #fff;
 }
 
-/* Formularz z danymi użytkownika */
 .user-details-form form {
     display: flex;
     flex-direction: column;
@@ -63,7 +60,7 @@ select:focus {
     font-size: 0.9rem;
     font-weight: bold;
     color: #2d3436;
-    margin-bottom: -10px; /* przybliżenie etykiety do inputa */
+    margin-bottom: -10px;
 }
 
 input {
@@ -79,12 +76,11 @@ hr {
     margin: 25px 0;
 }
 
-/* Przycisk na końcu */
 .submit-btn {
     margin-top: 20px;
     width: 100%;
     padding: 14px;
-    background-color: #00b894;
+    background-color: lightgray;
     color: white;
     border: none;
     border-radius: 8px;
