@@ -1,16 +1,72 @@
 import './Auth.css';
+import { useState } from 'react';
+
 export default function LoginForm() {
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setError(""); 
+
+        const loginData = {
+            mail: name,
+            password: password
+        };
+
+        try {
+            const response = await fetch('https://unexchangeable-julio-acaroid.ngrok-free.dev/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(loginData),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Zalogowano pomyślnie!", data);
+                
+                localStorage.setItem('token', data.token);
+                
+                alert("Sukces!");
+            } else {
+                const errorData = await response.json();
+                setError(errorData.message || "Błędny login lub hasło");
+            }
+        } catch (err) {
+            setError("Problem z połączeniem z serwerem.");
+        }
+    };
+
     return (
         <div className="auth-container">
-            <form className="auth-form">
+            {/* Dodajemy onSubmit do form */}
+            <form className="auth-form" onSubmit={handleSubmit}>
                 <h2>Zaloguj się</h2>
+                
+                {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
                 <div className="input-group">
-                    <label htmlFor="name">Nazwa użytkownika</label>
-                    <input type="text" id="name" name="name" placeholder="Wpisz nazwę..." />
+                    <label htmlFor="name">Mail użytkownika: </label>
+                    <input 
+                        type="email" 
+                        id="name" 
+                        value={name} // Dodajemy sterowanie wartością
+                        onChange={(e) => setName(e.target.value)} 
+                        required 
+                    />
                 </div>
                 <div className="input-group">
                     <label htmlFor="password">Hasło</label>
-                    <input type="password" id="password" placeholder="Wpisz hasło..." />
+                    <input 
+                        type="password" 
+                        id="password" 
+                        value={password} // Dodajemy sterowanie wartością
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required 
+                    />
                 </div>
                 <button type="submit" className="auth-button">Zaloguj</button>
             </form>

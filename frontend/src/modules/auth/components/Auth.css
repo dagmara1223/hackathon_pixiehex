@@ -1,13 +1,11 @@
-/* Stylizacja tła i kontenera */
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh; /* Centrowanie w pionie */
+    min-height: 80vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Karta formularza */
 .auth-form {
     background: #ffffff;
     padding: 2rem;
@@ -23,7 +21,6 @@
     text-align: center;
 }
 
-/* Grupowanie inputów */
 .input-group {
     margin-bottom: 1.2rem;
     display: flex;
@@ -45,14 +42,12 @@
     transition: border-color 0.3s ease;
 }
 
-/* Efekt po kliknięciu w input */
 .input-group input:focus {
     outline: none;
     border-color: #4A90E2;
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
-/* Przycisk */
 .auth-button {
     width: 100%;
     padding: 0.8rem;
