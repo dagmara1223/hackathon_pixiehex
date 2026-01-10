@@ -26,7 +26,9 @@ export default function Navbar() {
                 {userMail}
               </span>
             )}
-
+            <Link to="/basket" className="navbar__button">
+            Koszyk
+            </Link>
             <button
               onClick={handleLogout}
               className="navbar__button navbar__button--logout"
