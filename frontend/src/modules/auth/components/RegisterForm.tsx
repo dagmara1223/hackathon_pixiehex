@@ -15,7 +15,7 @@ function RegisterForm() {
             setError("Niepoprawne powtórzenie hasła!");
             return;
         }
-        if(password.length < 8){
+        if (password.length < 8) {
             setError("Za krótkie hasło!");
             return;
         }
@@ -30,6 +30,7 @@ function RegisterForm() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
                 },
                 body: JSON.stringify(registerData),
             });
@@ -53,22 +54,22 @@ function RegisterForm() {
                 {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
                 <div className="input-group">
                     <label htmlFor="email">Adres email</label>
-                    <input type="email" id="email" placeholder="Wpisz email..." value={email} onChange={(e)=>{
+                    <input type="email" id="email" placeholder="Wpisz email..." value={email} onChange={(e) => {
                         setEmail(e.target.value);
                     }}>
                     </input>
                 </div>
                 <div className="input-group">
                     <label htmlFor="password1">Hasło</label>
-                    <input type="password" id="password1" placeholder="Minimum 8 znaków" value={password} onChange={(e)=>{
+                    <input type="password" id="password1" placeholder="Minimum 8 znaków" value={password} onChange={(e) => {
                         setPassword(e.target.value);
-                    }}/>
+                    }} />
                 </div>
                 <div className="input-group">
                     <label htmlFor="password2">Powtórz hasło</label>
-                    <input type="password" id="password2" placeholder="Powtórz hasło..." value={password2} onChange={(e)=>{
+                    <input type="password" id="password2" placeholder="Powtórz hasło..." value={password2} onChange={(e) => {
                         setPassword2(e.target.value);
-                    }}/>
+                    }} />
                 </div>
                 <button type="submit" className="auth-button">Zarejestruj się</button>
             </form>
