@@ -10,24 +10,29 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class PdfGeneratorService {
 
-    // Folder, gdzie wylądują PDFy
-    private static final String REPORT_DIR = "./reports/";
+    // ZMIANA: Ścieżka celuje wprost w Twoje źródła w projekcie.
+    // Dzięki temu pliki pojawią się w IntelliJ w folderze resources.
+    private static final String REPORT_DIR = "./src/main/resources/reports/";
 
     public PdfGeneratorService() {
-        // Upewnij się, że folder istnieje
-        new File(REPORT_DIR).mkdirs();
+        // Tworzymy katalog, jeśli nie istnieje
+        File directory = new File(REPORT_DIR);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
     }
 
     public void generateVendorPdf(GroupOrder group) {
         try {
+            // Generowanie nazwy
             String filename = REPORT_DIR + "VENDOR_" + group.getName().replace(" ", "_") + ".pdf";
+
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(filename));
 
@@ -38,13 +43,12 @@ public class PdfGeneratorService {
             document.add(new Paragraph("ORDER FOR VENDOR (KOREA)", titleFont));
             document.add(new Paragraph("Batch: " + group.getName()));
             document.add(new Paragraph("Date: " + group.getCreatedDate().toString()));
-            document.add(new Paragraph(" ")); // Odstęp
+            document.add(new Paragraph(" "));
 
-            // Tabela: Produkt | Ilość
+            // Tabela
             PdfPTable table = new PdfPTable(2);
             addTableHeader(table, "Product Name", "Quantity");
 
-            // AGREGACJA: Zliczamy ile sztuk danego produktu zamówiono
             Map<String, Long> productCounts = group.getOrders().stream()
                     .collect(Collectors.groupingBy(SingleOrder::getProductName, Collectors.counting()));
 
@@ -54,23 +58,21 @@ public class PdfGeneratorService {
             }
 
             document.add(table);
-
-            // Stopka
             document.add(new Paragraph(" "));
             document.add(new Paragraph("Please ship to: K-Shipping Hub, Seoul, Warehouse 42."));
 
             document.close();
-            System.out.println("Wygenerowano PDF dla Vendora: " + filename);
+            System.out.println("✅ Wygenerowano PDF dla Vendora: " + filename);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // --- DOKUMENT 2: WEWNĘTRZNY (PEŁNE DANE) ---
     public void generateInternalSummaryPdf(GroupOrder group) {
         try {
             String filename = REPORT_DIR + "INTERNAL_" + group.getName().replace(" ", "_") + ".pdf";
+
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(filename));
 
@@ -82,9 +84,7 @@ public class PdfGeneratorService {
             document.add(new Paragraph("Total Weight: " + group.getTotalWeight() + "g"));
             document.add(new Paragraph(" "));
 
-            // Tabela: Email | Produkt | Cena | Adres
             PdfPTable table = new PdfPTable(4);
-            // Ustawiamy szerokości kolumn (żeby adres się zmieścił)
             table.setWidths(new float[] { 3, 3, 2, 4 });
 
             addTableHeader(table, "User Email", "Product", "Final Price", "Address");
@@ -93,13 +93,12 @@ public class PdfGeneratorService {
                 table.addCell(order.getUserEmail());
                 table.addCell(order.getProductName());
                 table.addCell(order.getFinalPrice() + " PLN");
-                // Obsługa nulla, jeśli adres nie podany
                 table.addCell(order.getShippingAddress() != null ? order.getShippingAddress() : "N/A");
             }
 
             document.add(table);
             document.close();
-            System.out.println("Wygenerowano PDF wewnętrzny: " + filename);
+            System.out.println("✅ Wygenerowano PDF wewnętrzny: " + filename);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +109,6 @@ public class PdfGeneratorService {
         for (String header : headers) {
             PdfPCell headerCell = new PdfPCell();
             headerCell.setPhrase(new Phrase(header));
-            // Szary kolor nagłówka
             headerCell.setBackgroundColor(java.awt.Color.LIGHT_GRAY);
             table.addCell(headerCell);
         }
