@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import "./mainform.css";
 import { ProductGrid } from "./ProductGrid";
 import * as z from 'zod';
+import { useNavigate } from "react-router-dom";
+
 type Product = {
     id: number;
     name: string;
@@ -11,26 +13,26 @@ type Product = {
 };
 
 export const contactSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Imię i nazwisko są za krótkie")
-    .regex(/^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]+$/, "Użyj tylko liter"),
-    
-  mail: z
-    .string()
-    .email("To nie jest poprawny adres e-mail"),
-    
-  address: z
-    .string()
-    .min(5, "Adres musi mieć co najmniej 5 znaków"),
-    
-  postal_code: z
-    .string()
-    .regex(/^\d{2}-\d{3}$/, "Kod pocztowy musi mieć format 00-000"),
-    
-  city: z
-    .string()
-    .min(2, "Nazwa miasta jest za krótka")
+    name: z
+        .string()
+        .min(2, "Imię i nazwisko są za krótkie")
+        .regex(/^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]+$/, "Użyj tylko liter"),
+
+    mail: z
+        .string()
+        .email("To nie jest poprawny adres e-mail"),
+
+    address: z
+        .string()
+        .min(5, "Adres musi mieć co najmniej 5 znaków"),
+
+    postal_code: z
+        .string()
+        .regex(/^\d{2}-\d{3}$/, "Kod pocztowy musi mieć format 00-000"),
+
+    city: z
+        .string()
+        .min(2, "Nazwa miasta jest za krótka")
 });
 
 function extractBrand(productName: string): string {
@@ -56,6 +58,9 @@ export default function MainForm() {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState("");
+    const navigate = useNavigate();
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
     const [userData, setUserData] = useState({
         name: "",
         mail: "",
@@ -98,26 +103,26 @@ export default function MainForm() {
 
     // produkty danej marki
     const filteredProducts = products.filter(
-            p => extractBrand(p.name) === chosenBrand
-        );
+        p => extractBrand(p.name) === chosenBrand
+    );
 
-    const handleCheck = () =>{
-            const validation = contactSchema.safeParse(userData);
-    
-            if (!validation.success) {
-                // Mapujemy błędy Zod na stan Twoich komunikatów w UI
-                //const errorMessages = validation.error.map(err => err.message);
-                const pretty = z.prettifyError(validation.error);
-                setErrors(pretty);
-                return false;
-    }
-    
+    const handleCheck = () => {
+        const validation = contactSchema.safeParse(userData);
+
+        if (!validation.success) {
+            // Mapujemy błędy Zod na stan Twoich komunikatów w UI
+            //const errorMessages = validation.error.map(err => err.message);
+            const pretty = z.prettifyError(validation.error);
+            setErrors(pretty);
+            return false;
+        }
+
         setErrors(""); // Czyścimy błędy, jeśli wszystko OK
         return true;
     }
     // submit
     const handleSubmit = async (e: React.FormEvent) => {
-        
+
         e.preventDefault()
         try {
             if (chosenProducts.length === 0) {
@@ -164,7 +169,7 @@ export default function MainForm() {
         <div className="mainform-container">
             <div className="order-card">
                 <h2>Zbierz grupę i zamów już teraz!</h2>
-                
+
                 {/* MARKA */}
                 <div className="selection-section">
                     <label>Marka:</label>
@@ -201,7 +206,7 @@ export default function MainForm() {
                         />
                     </div>
                 )}
-                {errors && <p style={{color: 'red'}}>{errors}</p>}
+                {errors && <p style={{ color: 'red' }}>{errors}</p>}
                 {/* FORMULARZ */}
                 {chosenProducts.length > 0 && (
                     <div className="user-details-form">
@@ -209,7 +214,11 @@ export default function MainForm() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                if(!handleCheck()){
+                                if (!handleCheck()) {
+                                    return;
+                                }
+                                if (!isLoggedIn) {
+                                    navigate("/login");
                                     return;
                                 }
                                 setShowConfirmModal(true);
