@@ -2,6 +2,7 @@ package com.pixiehex.kshipping.controller;
 
 import com.pixiehex.kshipping.model.User;
 import com.pixiehex.kshipping.model.User;
+import com.pixiehex.kshipping.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    public UserRepository userRepository;
+
+    public UserController(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+
     @GetMapping("/")
     public ResponseEntity<Object> getUser() {
         return ResponseEntity.ok(new User());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUser() {
+    public ResponseEntity<Object> getUser(@PathVariable int id) {
         return ResponseEntity.ok(new User());
     }
 

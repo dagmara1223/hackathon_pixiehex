@@ -14,7 +14,7 @@ public class Order {
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int orderId;
+    private Long orderId;
     @NotNull
     private int customerId;
     @NotEmpty(message = "Product list cannot be empty")
