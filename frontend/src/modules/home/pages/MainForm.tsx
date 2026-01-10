@@ -42,7 +42,7 @@ export default function MainForm() {
                     <input type="text" id="name" name="name" placeholder="Wpisz swoje imie..." />
                     <label htmlFor="surname">Nazwisko</label>
                     <input type="text" id="surname" name="surname" placeholder="Wpisz swoje nazwisko..." />
-                    <label htmlFor="mail">Mail</label>
+                    <label htmlFor="mail">E-Mail</label>
                     <input type="email" id="mail" name="mail" placeholder="Wpisz swój mail..." />
                 </form>
                 <button type="submit" className="submit-btn">Potwierdź zamówienie</button>
