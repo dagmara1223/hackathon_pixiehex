@@ -9,7 +9,7 @@ function App() {
       <main style={{ padding: "2rem" }}>
         <h1>Strona główna</h1>
         <p>
-          Platforma do wspólnych zamówień importowych z Korei Południowej.
+          W paczce siła!
         </p>
       </main>
     </>
