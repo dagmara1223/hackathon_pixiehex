@@ -2,13 +2,13 @@ import './Auth.css';
 import { useState } from 'react';
 
 export default function LoginForm() {
-    const [name, setName] = useState("");
+    const [mail, setMail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError(""); 
+        setError("");
 
         const loginData = {
             mail: name,
@@ -20,16 +20,21 @@ export default function LoginForm() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
                 },
-                body: JSON.stringify(loginData),
+                credentials: "include",
+                body: JSON.stringify({
+                    mail: mail,
+                    password: password,
+                })
             });
 
             if (response.ok) {
                 const data = await response.json();
                 console.log("Zalogowano pomyślnie!", data);
-                
+
                 localStorage.setItem('token', data.token);
-                
+
                 alert("Sukces!");
             } else {
                 const errorData = await response.json();
@@ -45,27 +50,27 @@ export default function LoginForm() {
             {/* Dodajemy onSubmit do form */}
             <form className="auth-form" onSubmit={handleSubmit}>
                 <h2>Zaloguj się</h2>
-                
+
                 {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
 
                 <div className="input-group">
                     <label htmlFor="name">Mail użytkownika: </label>
-                    <input 
-                        type="email" 
-                        id="name" 
-                        value={name} // Dodajemy sterowanie wartością
-                        onChange={(e) => setName(e.target.value)} 
-                        required 
+                    <input
+                        type="email"
+                        id="name"
+                        value={mail} // Dodajemy sterowanie wartością
+                        onChange={(e) => setMail(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="input-group">
                     <label htmlFor="password">Hasło</label>
-                    <input 
-                        type="password" 
-                        id="password" 
+                    <input
+                        type="password"
+                        id="password"
                         value={password} // Dodajemy sterowanie wartością
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                 </div>
                 <button type="submit" className="auth-button">Zaloguj</button>
