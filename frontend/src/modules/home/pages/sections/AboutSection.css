@@ -70,6 +70,35 @@
     color: #e5e5e5;
 }
 
+.about__title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    position: relative;
+    cursor: default;
+}
+
+.about__title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0%;
+    height: 3px;
+    background-color: black;
+    transition: width 0.4s ease;
+}
+
+.about__title:hover::after {
+    width: 100%;
+}
+
+.about__title:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+}
+
 
 @media (max-width: 768px) {
     .about__cards {
