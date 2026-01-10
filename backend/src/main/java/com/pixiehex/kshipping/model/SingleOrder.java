@@ -28,6 +28,8 @@ public class SingleOrder {
 
     private LocalDateTime orderDate;
 
+    private String phoneNumber;
+
     @ManyToOne
     @JoinColumn(name = "group_order_id")
     @JsonIgnoreProperties("orders")
@@ -41,11 +43,12 @@ public class SingleOrder {
     }
 
     // Zaktualizowany konstruktor
-    public SingleOrder(String productName, String userEmail, String shippingAddress, double originalPrice, double depositAmount, OrderStatus status) {
+    public SingleOrder(String productName, String userEmail, String shippingAddress, double originalPrice, double depositAmount, OrderStatus status, String phoneNumber) {
         this.productName = productName;
         this.userEmail = userEmail;
-        this.shippingAddress = shippingAddress; // <--- Tu dochodzi
+        this.shippingAddress = shippingAddress;
         this.originalPrice = originalPrice;
+        this.phoneNumber = phoneNumber;
         this.depositAmount = depositAmount;
         this.status = status;
         this.orderDate = LocalDateTime.now();
@@ -59,6 +62,14 @@ public class SingleOrder {
 
     public void setShippingAddress(String shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     // --- RESZTA GETTERÓW I SETTERÓW BEZ ZMIAN ---

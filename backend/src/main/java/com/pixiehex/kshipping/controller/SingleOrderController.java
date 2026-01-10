@@ -1,5 +1,6 @@
 package com.pixiehex.kshipping.controller;
 
+import com.pixiehex.kshipping.dto.CreateOrderRequest;
 import com.pixiehex.kshipping.model.SingleOrder;
 import com.pixiehex.kshipping.services.SingleOrderService;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,9 @@ public class SingleOrderController {
 
         String email = (String) payload.get("userEmail");
         String address = (String) payload.get("shippingAddress");
+        String phone = (String) payload.get("phoneNumber");
 
-        return ResponseEntity.ok(singleOrderService.createPreorder(name, price, weight, email, address));
+        return ResponseEntity.ok(singleOrderService.createPreorder(name, price, weight, email, address, phone));
     }
 
     @DeleteMapping("/{id}")
@@ -50,5 +52,15 @@ public class SingleOrderController {
     public ResponseEntity<List<SingleOrder>> closeCycle() {
         List<SingleOrder> lockedOrders = singleOrderService.closeCycleAndCalculateCosts();
         return ResponseEntity.ok(lockedOrders);
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<List<SingleOrder>> createOrdersBulk(@RequestBody CreateOrderRequest request) {
+        if (request.getUserEmail() == null || request.getItems() == null || request.getItems().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<SingleOrder> createdOrders = singleOrderService.createBulkOrders(request);
+        return ResponseEntity.ok(createdOrders);
     }
 }
