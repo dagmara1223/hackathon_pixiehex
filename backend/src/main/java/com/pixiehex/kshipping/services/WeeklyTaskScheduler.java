@@ -9,14 +9,22 @@ import org.springframework.stereotype.Component;
 public class WeeklyTaskScheduler {
 
     private final BatchService batchService;
+    private SingleOrderService singleOrderService;
 
-    public WeeklyTaskScheduler(BatchService batchService) {
+    public WeeklyTaskScheduler(BatchService batchService, SingleOrderService singleOrderService) {
         this.batchService = batchService;
+        this.singleOrderService = singleOrderService;
+    }
+
+    @Scheduled(cron = "0 0 0 * * SAT")
+    public void runWeeklyLocked() {
+        singleOrderService.changeToLocked();
     }
 
     // Every Monday at 00:00
     @Scheduled(cron = "0 0 0 * * MON")
     public void runWeeklyBatching() {
+        singleOrderService.changeUnpaidToCancelled();
         batchService.processBatching();
     }
 }

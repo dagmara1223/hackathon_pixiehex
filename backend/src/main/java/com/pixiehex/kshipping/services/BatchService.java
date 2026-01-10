@@ -38,7 +38,7 @@ public class BatchService {
 
     @Transactional
     public String processBatching() {
-        List<SingleOrder> openOrders = singleOrderRepository.findByStatus(OrderStatus.OPEN);
+        List<SingleOrder> openOrders = singleOrderRepository.findByStatus(OrderStatus.LOCKED);
 
         if (openOrders.isEmpty()) {
             return "Brak otwartych zamówień do spakowania.";

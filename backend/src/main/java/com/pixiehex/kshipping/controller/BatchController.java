@@ -6,6 +6,7 @@ import com.pixiehex.kshipping.repository.GroupOrderRepository;
 import com.pixiehex.kshipping.services.BatchService;
 import com.pixiehex.kshipping.services.FakeEmailService; // <--- WAŻNY IMPORT
 import com.pixiehex.kshipping.services.PdfGeneratorService;
+import com.pixiehex.kshipping.services.SingleOrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,19 +21,22 @@ public class BatchController {
     private final GroupOrderRepository groupOrderRepository;
     private final PdfGeneratorService pdfGeneratorService;
     private final FakeEmailService emailService; // <--- 1. NOWE POLE SERWISU
+    private final SingleOrderService singleOrderService;
 
     public BatchController(BatchService batchService,
                            GroupOrderRepository groupOrderRepository,
                            PdfGeneratorService pdfGeneratorService,
-                           FakeEmailService emailService) {
+                           FakeEmailService emailService, SingleOrderService singleOrderService) {
         this.batchService = batchService;
         this.groupOrderRepository = groupOrderRepository;
         this.pdfGeneratorService = pdfGeneratorService;
         this.emailService = emailService;
+        this.singleOrderService = singleOrderService;
     }
 
     @PostMapping("/run")
     public ResponseEntity<String> runBatching() {
+        singleOrderService.changeUnpaidToCancelled();
         String result = batchService.processBatching();
         return ResponseEntity.ok(result);
     }
@@ -52,8 +56,7 @@ public class BatchController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // <--- 3. NOWY ENDPOINT Z LOGIKĄ POWIADOMIEŃ
-    // Endpoint: PATCH http://localhost:8080/batch/1/status?newStatus=ON_THE_WAY
+
     @PatchMapping("/{id}/status")
     public ResponseEntity<?> updateBatchStatus(@PathVariable Long id, @RequestParam String newStatus) {
         return groupOrderRepository.findById(id)
