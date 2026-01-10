@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public class Order {
+public class GroupOrder {
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
