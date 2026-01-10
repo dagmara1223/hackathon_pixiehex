@@ -1,17 +1,13 @@
 import Navbar from "./shared/components/Navbar/Navbar";
+import Slider from "./modules/auth/components/slider/Slider";
 import "./App.css";
 
 function App() {
   return (
     <>
       <Navbar />
+      <Slider />
 
-      <main style={{ padding: "2rem" }}>
-        <h1>Strona główna</h1>
-        <p>
-          W paczce siła!
-        </p>
-      </main>
     </>
   );
 }
