@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { getCart, removeFromCart } from "../../../utils/cart";
+import { getCart, removeFromCart, clearCart } from "../../../utils/cart";
 import type { CartProduct } from "../../../utils/cart";
 
 export default function Basket() {
     const [products, setProducts] = useState<CartProduct[]>([]);
+    const [showDepositModal, setShowDepositModal] = useState(false);
+    const [isPaying, setIsPaying] = useState(false);
+    const [depositPaid, setDepositPaid] = useState(false);
+
 
     useEffect(() => {
         setProducts(getCart());
@@ -44,6 +48,68 @@ export default function Basket() {
             </ul>
 
             <h3>Suma: {total.toFixed(2)} zł</h3>
+            <button
+                className="submit-btn"
+                onClick={() => setShowDepositModal(true)}
+            >
+                Zapłać zaliczkę 40 zł
+            </button>
+            {showDepositModal && (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h3>Rezerwacja miejsca w grupie</h3>
+
+                        <p>
+                            Aby potwierdzić udział w zamówieniu grupowym,
+                            wymagana jest <strong>zaliczka 40 zł</strong>.
+                        </p>
+
+                        <p>
+                            Finalna cena (z uwzględnieniem liczby osób w grupie,
+                            VAT 23% oraz kosztów wysyłki) zostanie wysłana
+                            na Twój email po skompletowaniu grupy.
+                        </p>
+
+                        <p className="modal-small">
+                            Zaliczka zostanie odliczona od ceny końcowej.
+                        </p>
+
+                        <div className="modal-actions">
+                            <button
+                                className="modal-cancel"
+                                onClick={() => setShowDepositModal(false)}
+                            >
+                                Anuluj
+                            </button>
+
+                            <button
+                                className="modal-confirm"
+                                disabled={isPaying}
+                                onClick={async () => {
+                                    setIsPaying(true);
+
+                                    setTimeout(() => {
+                                        setDepositPaid(true);
+
+                                        clearCart();
+                                        setProducts([]);
+
+                                        setShowDepositModal(false);
+                                        setIsPaying(false);
+
+                                        alert("✅ Zaliczka opłacona. Rezerwacja zapisana!");
+                                    }, 1200);
+                                }}
+                            >
+                                {isPaying ? "Przetwarzanie..." : "Zapłać 40 zł"}
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
+
     );
 }
