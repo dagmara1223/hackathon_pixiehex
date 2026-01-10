@@ -4,7 +4,7 @@ export default function AboutSection() {
     return (
         <section className="about">
             <div className="about__content">
-                <h2>W paczce siła</h2>
+                <h1>W paczce siła!</h1>
 
                 <p>
                     PIXIEHEX to platforma do wspólnych zamówień kosmetyków i produktów
