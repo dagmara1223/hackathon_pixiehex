@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/photos")
+@CrossOrigin(origins = "*")
 public class PhotoController {
 
     private final PhotoService photoService;

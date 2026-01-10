@@ -16,21 +16,25 @@ public class BatchService {
     private final SingleOrderRepository singleOrderRepository;
     private final GroupOrderRepository groupOrderRepository;
 
+    private final PdfGeneratorService pdfGeneratorService;
+
     private static final double MAX_BOX_WEIGHT = 10000.0;
     private static final double MIN_VIABLE_WEIGHT = 1000.0;
 
-    private static final int MIN_PEOPLE_COUNT = 5;
+    private static final int MIN_PEOPLE_COUNT = 2;
 
-    private static final double VAT_RATE = 1.23; // 23% VAT
+    private static final double VAT_RATE = 1.23;
 
-    public BatchService(SingleOrderRepository singleOrderRepository, GroupOrderRepository groupOrderRepository) {
+    public BatchService(SingleOrderRepository singleOrderRepository,
+                        GroupOrderRepository groupOrderRepository,
+                        PdfGeneratorService pdfGeneratorService) {
         this.singleOrderRepository = singleOrderRepository;
         this.groupOrderRepository = groupOrderRepository;
+        this.pdfGeneratorService = pdfGeneratorService;
     }
 
     @Transactional
     public String processBatching() {
-        // 1. Pobierz wszystkie otwarte zamówienia
         List<SingleOrder> openOrders = singleOrderRepository.findByStatus(OrderStatus.OPEN);
 
         if (openOrders.isEmpty()) {
@@ -40,13 +44,12 @@ public class BatchService {
         int batchesCreated = 0;
         int ordersRolledOver = 0;
 
-        GroupOrder currentBatch = new GroupOrder("Batch #" + System.currentTimeMillis());
+        GroupOrder currentBatch = new GroupOrder("Batch " + java.time.LocalDate.now() + " #" + System.currentTimeMillis() % 1000);
 
         for (SingleOrder order : openOrders) {
             double orderWeight = order.getProductWeight();
 
             if (currentBatch.getTotalWeight() + orderWeight > MAX_BOX_WEIGHT) {
-
                 if (finalizeBatchIfViable(currentBatch)) {
                     batchesCreated++;
                 } else {
@@ -55,10 +58,8 @@ public class BatchService {
                         so.setGroupOrder(null);
                     }
                 }
-
-                currentBatch = new GroupOrder("Batch #" + System.currentTimeMillis());
+                currentBatch = new GroupOrder("Batch " + java.time.LocalDate.now() + " #" + System.currentTimeMillis() % 1000);
             }
-
             currentBatch.addOrder(order);
         }
 
@@ -78,7 +79,6 @@ public class BatchService {
     private boolean finalizeBatchIfViable(GroupOrder batch) {
         if (batch.getOrders().isEmpty()) return false;
 
-        // Liczymy unikalnych klientów (maile)
         long uniqueUsersCount = batch.getOrders().stream()
                 .map(SingleOrder::getUserEmail)
                 .distinct()
@@ -88,25 +88,22 @@ public class BatchService {
         boolean peopleOk = uniqueUsersCount >= MIN_PEOPLE_COUNT;
 
         if (weightOk && peopleOk) {
-            // A. Pobieramy koszt wysyłki dla całej paczki
             double totalShippingCost = calculateShippingCostFromTable(batch.getTotalWeight());
-
-            // B. Dzielimy ten koszt sprawiedliwie na ludzi
             distributeCosts(batch, totalShippingCost);
 
-            // C. Zamykamy paczkę
             batch.setStatus(GroupOrder.GroupStatus.READY_TO_SHIP);
-            groupOrderRepository.save(batch); // Zapis do bazy
+            groupOrderRepository.save(batch);
+
+
+            pdfGeneratorService.generateVendorPdf(batch);
+            pdfGeneratorService.generateInternalSummaryPdf(batch);
+
             return true;
         }
 
         return false;
     }
 
-    /**
-     * TWOJA TABELA CENOWA
-     * Logika: Im cięższa paczka, tym taniej za kilogram.
-     */
     private double calculateShippingCostFromTable(double weightInGrams) {
         double weightInKg = weightInGrams / 1000.0;
 
@@ -116,39 +113,28 @@ public class BatchService {
         if (weightInKg <= 4.0) return 520.0;
         if (weightInKg <= 5.0) return 600.0;
         if (weightInKg <= 6.0) return 660.0;
+        if (weightInKg <= 7.0) return 720.0;
+        if (weightInKg <= 8.0) return 770.0;
+        if (weightInKg <= 9.0) return 820.0;
+        if (weightInKg <= 10.0) return 860.0;
 
-        // Skok cenowy: paczki 6-10kg kosztują ryczałtowo 900 zł
-        if (weightInKg <= 10.0) return 900.0;
-
-        // Powyżej 10kg (teoretycznie niemożliwe przez MAX_BOX_WEIGHT, ale bezpiecznik)
-        return 1500.0;
+        return 1000.0;
     }
 
-    /**
-     * Algorytm "Robin Hood" - bogatsi (cięższe paczki) płacą proporcjonalnie więcej,
-     * ale i tak wszyscy zyskują względem wysyłki indywidualnej.
-     */
     private void distributeCosts(GroupOrder batch, double totalShippingCost) {
         double batchTotalWeight = batch.getTotalWeight();
 
         for (SingleOrder order : batch.getOrders()) {
-            // 1. Jaki % wagi całej paczki zajmuje to zamówienie?
             double weightShare = order.getProductWeight() / batchTotalWeight;
-
-            // 2. Wyliczamy opłatę za wysyłkę dla tego konkretnego zamówienia
             double shippingForThisOrder = totalShippingCost * weightShare;
 
-            // 3. Dodajemy cenę produktu i VAT
             double basePrice = order.getOriginalPrice();
             double totalWithTax = (basePrice + shippingForThisOrder) * VAT_RATE;
-
-            // 4. Ile dopłaty zostało (Cena końcowa - Zaliczka)
             double remaining = totalWithTax - order.getDepositAmount();
 
-            // 5. Aktualizujemy zamówienie w bazie
-            order.setFinalPrice(Math.round(totalWithTax * 100.0) / 100.0);   // Zaokrąglenie do groszy
+            order.setFinalPrice(Math.round(totalWithTax * 100.0) / 100.0);
             order.setRemainingToPay(Math.round(remaining * 100.0) / 100.0);
-            order.setStatus(OrderStatus.LOCKED); // Blokujemy możliwość anulowania
+            order.setStatus(OrderStatus.LOCKED);
         }
     }
 }
