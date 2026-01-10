@@ -1,6 +1,6 @@
 .about {
-    padding: 3rem 2rem;
-    background-color: rgb(199, 199, 198);
+    padding: 4rem 2rem;
+    background-color: white;
 }
 
 .about__content {
@@ -9,8 +9,8 @@
     text-align: center;
 }
 
-.about h1 {
-    font-size: 3rem;
+.about h2 {
+    font-size: 2rem;
     margin-bottom: 1.5rem;
 }
 
