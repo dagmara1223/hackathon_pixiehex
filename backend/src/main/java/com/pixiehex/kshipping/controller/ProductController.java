@@ -1,6 +1,7 @@
 package com.pixiehex.kshipping.controller;
 
 import com.pixiehex.kshipping.model.Product;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,27 +10,27 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     @GetMapping("/")
-    public List<Product> getProduct() {
+    public ResponseEntity<Object> getProduct() {
         return;
     }
 
     @GetMapping("/{id}")
-    public Product getProduct() {
+    public ResponseEntity<Object> getProduct() {
         return;
     }
 
     @PostMapping("/")
-    public Product addProduct(@RequestBody Product product) {
+    public ResponseEntity<Object> addProduct(@RequestBody Product product) {
         return product;
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@RequestBody Product product, @PathVariable int id) {
+    public ResponseEntity<Object> updateProduct(@RequestBody Product product, @PathVariable int id) {
         return product;
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable int id) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable int id) {
         return;
     }
 
