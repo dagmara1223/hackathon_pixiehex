@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/client")
 public class ClientController {
 
     public ClientRepository clientRepository;
@@ -16,7 +16,7 @@ public class ClientController {
         this.clientRepository = clientRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Object> getUser() {
         return ResponseEntity.ok(new Client());
     }
@@ -26,12 +26,12 @@ public class ClientController {
         return ResponseEntity.ok(new Client());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Object> addUser(@Valid @RequestBody Client Client) {
         return ResponseEntity.ok(new Client());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<Object> updateUser(@Valid @RequestBody Client Client, @PathVariable int id) {
         return ResponseEntity.ok(new Client());
     }

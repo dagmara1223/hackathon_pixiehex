@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/group_order")
 public class GroupOrderController {
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Object> getGroupOrder() {
         return ResponseEntity.ok(new GroupOrder());
     }
@@ -20,7 +20,7 @@ public class GroupOrderController {
         return ResponseEntity.ok(new GroupOrder());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Object> addGroupOrder(@Valid @RequestBody GroupOrder GroupOrder) {
         return ResponseEntity.ok(new GroupOrder());
     }

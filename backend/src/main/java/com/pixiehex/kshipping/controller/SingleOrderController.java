@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/single_order")
 public class SingleOrderController {
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Object> getOrder() {
         return ResponseEntity.ok(new SingleOrder());
     }
@@ -19,7 +19,7 @@ public class SingleOrderController {
         return ResponseEntity.ok(new SingleOrder());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Object> addOrder(@Valid @RequestBody SingleOrder SingleOrder) {
         return ResponseEntity.ok(new SingleOrder());
     }
