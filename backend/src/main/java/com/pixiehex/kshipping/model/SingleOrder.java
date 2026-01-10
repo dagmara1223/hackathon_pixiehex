@@ -2,6 +2,7 @@ package com.pixiehex.kshipping.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class SingleOrder {
@@ -29,6 +30,7 @@ public class SingleOrder {
 
     @ManyToOne
     @JoinColumn(name = "group_order_id")
+    @JsonIgnoreProperties("orders")
     private GroupOrder groupOrder;
 
     public enum OrderStatus {

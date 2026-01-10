@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 @Service
 public class ReportService {
 
-    // Ten folder musi być taki sam jak w PdfGeneratorService!
     private final String REPORT_DIR = "./src/main/resources/reports/";
 
     public ReportService() {
