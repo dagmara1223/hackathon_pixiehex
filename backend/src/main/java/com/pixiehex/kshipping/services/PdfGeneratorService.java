@@ -94,6 +94,7 @@ public class PdfGeneratorService {
                 table.addCell(order.getProductName());
                 table.addCell(order.getFinalPrice() + " PLN");
                 table.addCell(order.getShippingAddress() != null ? order.getShippingAddress() : "N/A");
+                table.addCell(order.getPhoneNumber() != null ? order.getPhoneNumber() : "-");
             }
 
             document.add(table);
@@ -111,6 +112,67 @@ public class PdfGeneratorService {
             headerCell.setPhrase(new Phrase(header));
             headerCell.setBackgroundColor(java.awt.Color.LIGHT_GRAY);
             table.addCell(headerCell);
+        }
+    }
+
+    public void generateShippingLabels(GroupOrder group) {
+        try {
+            String filename = REPORT_DIR + "LABELS_" + group.getName().replace(" ", "_") + ".pdf";
+
+            // Format A6 (typowy dla etykiet) lub A4
+            Document document = new Document(PageSize.A4);
+            PdfWriter.getInstance(document, new FileOutputStream(filename));
+
+            document.open();
+
+            for (SingleOrder order : group.getOrders()) {
+                // Nowa strona dla każdego klienta
+                document.newPage();
+
+                // --- RAMKA ETYKIETY (Rysujemy tabelą) ---
+                PdfPTable labelTable = new PdfPTable(1);
+                labelTable.setWidthPercentage(100);
+
+                // --- SEKCJA GÓRNA: KURIER ---
+                PdfPCell header = new PdfPCell();
+                header.setBorderWidth(2);
+                header.setPadding(10);
+                header.addElement(new Paragraph("K-SHIPPING EXPRESS", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 24)));
+                header.addElement(new Paragraph("PRIORITY / LOTNICZA", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+                labelTable.addCell(header);
+
+                // --- SEKCJA: ADRESAT ---
+                PdfPCell addressCell = new PdfPCell();
+                addressCell.setPadding(15);
+                addressCell.addElement(new Paragraph("ODBIORCA:", FontFactory.getFont(FontFactory.HELVETICA, 10)));
+                addressCell.addElement(new Paragraph(order.getUserEmail(), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14)));
+                addressCell.addElement(new Paragraph("Tel: " + (order.getPhoneNumber() != null ? order.getPhoneNumber() : "---")));
+                addressCell.addElement(new Paragraph("Adres:"));
+                addressCell.addElement(new Paragraph(order.getShippingAddress() != null ? order.getShippingAddress() : "BRAK ADRESU", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+                labelTable.addCell(addressCell);
+
+                PdfPCell barcodeCell = new PdfPCell();
+                barcodeCell.setPadding(20);
+                barcodeCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+                Paragraph fakeBarcode = new Paragraph("||| || ||| | ||| || || |||| ||| ||", FontFactory.getFont(FontFactory.COURIER_BOLD, 20));
+                fakeBarcode.setAlignment(Element.ALIGN_CENTER);
+
+                barcodeCell.addElement(fakeBarcode);
+                barcodeCell.addElement(new Paragraph("TRACKING: KSH-" + order.getOrderId() + "-PL", FontFactory.getFont(FontFactory.COURIER, 12)));
+
+                labelTable.addCell(barcodeCell);
+
+                document.add(labelTable);
+
+                document.add(new Paragraph("\n------------------------------------------------------------\n"));
+            }
+
+            document.close();
+            System.out.println("✅ Wygenerowano etykiety: " + filename);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
