@@ -1,0 +1,27 @@
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.product-card {
+    padding: 15px;
+    border: 2px solid #dfe6e9;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+
+.product-card:hover {
+    border-color: lightgray;
+    transform: translateY(-3px);
+}
+
+.product-card.active {
+    border-color: rgb(98, 98, 98);
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(86, 86, 86, 0.2);
+}
