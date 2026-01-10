@@ -21,13 +21,16 @@ public class SingleOrderService {
         this.orderRepository = orderRepository;
     }
 
-    public SingleOrder createPreorder(String productName, double price, String userEmail) {
+    public SingleOrder createPreorder(String productName, double price, double weight, String userEmail, String shippingAddress) {
+
         double deposit = price * 0.30;
 
         SingleOrder order = new SingleOrder();
         order.setProductName(productName);
         order.setUserEmail(userEmail);
+        order.setShippingAddress(shippingAddress); // <--- Zapisujemy adres
         order.setOriginalPrice(price);
+        order.setProductWeight(weight); // Zakładam, że wagę też przesyłasz
         order.setDepositAmount(deposit);
         order.setRemainingToPay(0);
         order.setStatus(OrderStatus.OPEN);

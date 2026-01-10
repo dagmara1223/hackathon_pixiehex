@@ -13,10 +13,14 @@ public class SingleOrder {
     private String productName;
     private String userEmail;
 
+    // --- NOWE POLE ---
+    private String shippingAddress;
+
     private double originalPrice;
     private double depositAmount;
     private double finalPrice;
     private double remainingToPay;
+    private double productWeight;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -28,18 +32,17 @@ public class SingleOrder {
     private GroupOrder groupOrder;
 
     public enum OrderStatus {
-        OPEN,
-        LOCKED,
-        PAID,
-        CANCELLED
+        OPEN, LOCKED, PAID, CANCELLED
     }
 
     public SingleOrder() {
     }
 
-    public SingleOrder(String productName, String userEmail, double originalPrice, double depositAmount, OrderStatus status) {
+    // Zaktualizowany konstruktor
+    public SingleOrder(String productName, String userEmail, String shippingAddress, double originalPrice, double depositAmount, OrderStatus status) {
         this.productName = productName;
         this.userEmail = userEmail;
+        this.shippingAddress = shippingAddress; // <--- Tu dochodzi
         this.originalPrice = originalPrice;
         this.depositAmount = depositAmount;
         this.status = status;
@@ -47,84 +50,46 @@ public class SingleOrder {
         this.remainingToPay = 0.0;
     }
 
-
-    public Long getOrderId() {
-        return orderId;
+    // --- GETTERY I SETTERY DLA ADRESU ---
+    public String getShippingAddress() {
+        return shippingAddress;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 
-    public String getProductName() {
-        return productName;
-    }
+    // --- RESZTA GETTERÓW I SETTERÓW BEZ ZMIAN ---
+    public double getProductWeight() { return productWeight; }
+    public void setProductWeight(double productWeight) { this.productWeight = productWeight; }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
+    public Long getOrderId() { return orderId; }
+    public void setOrderId(Long orderId) { this.orderId = orderId; }
 
-    public String getUserEmail() {
-        return userEmail;
-    }
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
+    public String getUserEmail() { return userEmail; }
+    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
 
-    public double getOriginalPrice() {
-        return originalPrice;
-    }
+    public double getOriginalPrice() { return originalPrice; }
+    public void setOriginalPrice(double originalPrice) { this.originalPrice = originalPrice; }
 
-    public void setOriginalPrice(double originalPrice) {
-        this.originalPrice = originalPrice;
-    }
+    public double getDepositAmount() { return depositAmount; }
+    public void setDepositAmount(double depositAmount) { this.depositAmount = depositAmount; }
 
-    public double getDepositAmount() {
-        return depositAmount;
-    }
+    public double getFinalPrice() { return finalPrice; }
+    public void setFinalPrice(double finalPrice) { this.finalPrice = finalPrice; }
 
-    public void setDepositAmount(double depositAmount) {
-        this.depositAmount = depositAmount;
-    }
+    public double getRemainingToPay() { return remainingToPay; }
+    public void setRemainingToPay(double remainingToPay) { this.remainingToPay = remainingToPay; }
 
-    public double getFinalPrice() {
-        return finalPrice;
-    }
+    public OrderStatus getStatus() { return status; }
+    public void setStatus(OrderStatus status) { this.status = status; }
 
-    public void setFinalPrice(double finalPrice) {
-        this.finalPrice = finalPrice;
-    }
+    public LocalDateTime getOrderDate() { return orderDate; }
+    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
 
-    public double getRemainingToPay() {
-        return remainingToPay;
-    }
-
-    public void setRemainingToPay(double remainingToPay) {
-        this.remainingToPay = remainingToPay;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public GroupOrder getGroupOrder() {
-        return groupOrder;
-    }
-
-    public void setGroupOrder(GroupOrder groupOrder) {
-        this.groupOrder = groupOrder;
-    }
+    public GroupOrder getGroupOrder() { return groupOrder; }
+    public void setGroupOrder(GroupOrder groupOrder) { this.groupOrder = groupOrder; }
 }
