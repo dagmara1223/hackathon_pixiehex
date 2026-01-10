@@ -15,6 +15,41 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public @NotEmpty @NotBlank String getName() {
+        return name;
+    }
+
+    public void setName(@NotEmpty @NotBlank String name) {
+        this.name = name;
+    }
+
+    @DecimalMin("0.1")
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(@DecimalMin("0.1") double price) {
+        this.price = price;
+    }
+
+    @DecimalMin("0.1")
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(@DecimalMin("0.1") float weight) {
+        this.weight = weight;
+    }
+
     @NotEmpty @NotBlank
     private String name;
     @DecimalMin("0.1")
