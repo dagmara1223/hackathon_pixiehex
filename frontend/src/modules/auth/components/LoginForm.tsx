@@ -1,10 +1,12 @@
 import './Auth.css';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
     const [mail, setMail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -25,17 +27,18 @@ export default function LoginForm() {
             });
 
             if (response.ok) {
-                const text = await response.text();
-                console.log("LOGIN RESPONSE:", text);
-                alert("Zalogowano!");
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("userMail", mail);
+                navigate("/");
                 return;
             }
+
             else {
                 const errorData = await response.json();
                 setError(errorData.message || "Błędny login lub hasło");
             }
         } catch (err) {
-            setError("Problem z połączeniem z serwerem.");
+            setError("Błedny login lub hasło.");
         }
     };
 
