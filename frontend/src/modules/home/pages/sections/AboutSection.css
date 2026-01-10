@@ -98,10 +98,51 @@
     transform: translateY(-2px);
     transition: transform 0.3s ease;
 }
-.about__card:hover{
+
+.about__card:hover {
     transform: scale(1.03);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
+
+.about__pricing {
+    margin-top: 5rem;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.about__pricing-desc {
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    color: #444;
+}
+
+.pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.pricing-table th,
+.pricing-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.95rem;
+}
+
+.pricing-table th {
+    background-color: #f4f4f4;
+    font-weight: 600;
+}
+
+
+.highlight-row {
+    background-color: #000;
+    color: white;
+    font-weight: 600;
+}
+
+
 
 @media (max-width: 768px) {
     .about__cards {
