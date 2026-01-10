@@ -10,13 +10,10 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Client {
-    public @NotNull Long getOrderId() {
-        return orderId;
+    public @NotNull Long getClientId() {
+        return clientId;
     }
 
-    public void setOrderId(@NotNull Long orderId) {
-        this.orderId = orderId;
-    }
 
     public @Email String getMail() {
         return mail;
@@ -37,10 +34,12 @@ public class Client {
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long orderId;
+    private Long clientId;
     @Email
     private String mail;
     @NotNull
     private String password;
 
 }
+
+
