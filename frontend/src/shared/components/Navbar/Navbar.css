@@ -1,34 +1,57 @@
+/* 1. Globalny reset dla linków w Navbarze */
+.navbar a {
+    text-decoration: none; /* Usuwa podkreślenie */
+    color: inherit;       /* Sprawia, że link nie jest niebieski/fioletowy */
+    display: inline-block; /* Pozwala na poprawne nakładanie paddingów */
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     padding: 1rem 2rem;
     border-bottom: 1px solid #e5e5e5;
     background-color: #ffffff;
 }
 
+/* 2. Logo - upewniamy się, że zawsze jest czarne */
 .navbar__logo {
     font-weight: 700;
     font-size: 1.2rem;
     letter-spacing: 0.5px;
+    color: #000000; 
 }
 
 .navbar__actions {
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
+/* 3. Przyciski (Link jako przycisk) */
 .navbar__button {
     padding: 0.5rem 1rem;
     border: 1px solid #ccc;
     background: transparent;
     cursor: pointer;
     border-radius: 6px;
+    transition: all 0.2s ease; /* Płynne przejście przy najechaniu */
+    color: #333 !important;    /* Wymuszamy kolor tekstu */
 }
 
+.navbar__button:hover {
+    background-color: #f5f5f5;
+    border-color: #999;
+}
+
+/* 4. Przycisk główny (Primary) */
 .navbar__button--primary {
     background-color: black;
-    color: white;
+    color: white !important; /* Tutaj wymuszamy biały tekst */
     border-color: black;
+}
+
+.navbar__button--primary:hover {
+    background-color: #333;
+    border-color: #333;
 }
