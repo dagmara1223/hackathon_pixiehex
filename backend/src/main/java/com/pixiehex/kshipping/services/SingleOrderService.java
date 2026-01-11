@@ -151,4 +151,10 @@ public class SingleOrderService {
         order.setStatus(SingleOrder.OrderStatus.PAID);
         return orderRepository.save(order);
     }
+
+    public void changeToLocked() {
+    }
+
+    public void changeUnpaidToCancelled() {
+    }
 }

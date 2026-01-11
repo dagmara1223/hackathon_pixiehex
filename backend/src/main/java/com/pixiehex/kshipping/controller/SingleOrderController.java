@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/single_orders")
+@RequestMapping("/single_orders") // <--- ZMIANA: Krótszy, standardowy URL
 @CrossOrigin(origins = "*")
 public class SingleOrderController {
 
@@ -29,6 +29,7 @@ public class SingleOrderController {
     public ResponseEntity<SingleOrder> createPreorder(@RequestBody Map<String, Object> payload) {
         String name = (String) payload.get("productName");
 
+        // Zabezpieczenie przed rzutowaniem (czasem JSON wysyła integer 50, a java chce double 50.0)
         double price = Double.parseDouble(payload.get("price").toString());
         double weight = payload.containsKey("weight") ? Double.parseDouble(payload.get("weight").toString()) : 0.0;
 
