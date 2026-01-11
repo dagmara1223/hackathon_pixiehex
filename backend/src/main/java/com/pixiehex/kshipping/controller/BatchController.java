@@ -36,7 +36,7 @@ public class BatchController {
 
     @PostMapping("/run")
     public ResponseEntity<String> runBatching() {
-        singleOrderService.changeUnpaidToCancelled();
+//        singleOrderService.changeUnpaidToCancelled();
         String result = batchService.processBatching();
         return ResponseEntity.ok(result);
     }
