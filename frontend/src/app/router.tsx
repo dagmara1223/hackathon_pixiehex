@@ -9,15 +9,15 @@ import OrderHistory from "../modules/home/pages/OrderHistory";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,      // layout z Navbar + Outlet
+    element: <App />, 
     children: [
       { index: true, element: <HomePage /> },
       { path: "login", element: <LoginForm /> },
       { path: "register", element: <RegisterForm /> },
-      {path: "basket", element: <Basket />},
-      {path: "orderhistory", element: <OrderHistory/>}
+      { path: "basket", element: <Basket /> },
+      { path: "orderhistory", element: <OrderHistory /> }
     ],
   },
 ]);
 
-export default router; // ⬅️ UWAGA: eksportujesz OBIEKT, nie funkcję
+export default router; 

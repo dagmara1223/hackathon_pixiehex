@@ -14,7 +14,6 @@ public class SingleOrder {
     private String productName;
     private String userEmail;
 
-    // --- NOWE POLE ---
     private String shippingAddress;
 
     private double originalPrice;
@@ -70,7 +69,6 @@ public class SingleOrder {
         this.phoneNumber = phoneNumber;
     }
 
-    // --- RESZTA GETTERÓW I SETTERÓW BEZ ZMIAN ---
     public double getProductWeight() { return productWeight; }
     public void setProductWeight(double productWeight) { this.productWeight = productWeight; }
 

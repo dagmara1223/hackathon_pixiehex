@@ -13,7 +13,7 @@ export default function LoginForm() {
         setError("");
 
         try {
-            const response = await fetch('https://unexchangeable-julio-acaroid.ngrok-free.dev/auth/login', {
+            const response = await fetch('https://concerned-sprayless-brandie.ngrok-free.dev/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,12 +25,12 @@ export default function LoginForm() {
                     password: password,
                 })
             });
-            
+
             if (response.ok) {
                 localStorage.setItem("isLoggedIn", "true");
                 localStorage.setItem("userMail", mail);
 
-                
+
 
                 // fetch('https://.../client', { headers: { 'ngrok-skip-browser-warning': 'true' } })
                 //             .then(res => res.json())
@@ -54,7 +54,6 @@ export default function LoginForm() {
 
     return (
         <div className="auth-container">
-            {/* Dodajemy onSubmit do form */}
             <form className="auth-form" onSubmit={handleSubmit}>
                 <h2>Zaloguj się</h2>
 
@@ -65,7 +64,7 @@ export default function LoginForm() {
                     <input
                         type="email"
                         id="name"
-                        value={mail} // Dodajemy sterowanie wartością
+                        value={mail} 
                         onChange={(e) => setMail(e.target.value)}
                         required
                     />
@@ -75,7 +74,7 @@ export default function LoginForm() {
                     <input
                         type="password"
                         id="password"
-                        value={password} // Dodajemy sterowanie wartością
+                        value={password} 
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />

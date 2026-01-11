@@ -9,12 +9,12 @@ type Order = {
     status: string,
     finalPrice: number,
     groupOrder: {
-      name: string,
-      createdDate: string,
-      id: number,
-      status: string,
-      totalValue: number,
-      totalWeight: number
+        name: string,
+        createdDate: string,
+        id: number,
+        status: string,
+        totalValue: number,
+        totalWeight: number
     },
     orderDate: string,
     orderId: number,
@@ -22,23 +22,20 @@ type Order = {
     remainingToPay: number
 }
 
-export default function OrderHistory(){
+export default function OrderHistory() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const userMail = localStorage.getItem("userMail");
 
-    
-    
-    // `https://unexchangeable-julio-acaroid.ngrok-free.dev/single_orders/by-email?mail=${userMail}`
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://unexchangeable-julio-acaroid.ngrok-free.dev/single_orders/by-email?mail=${userMail}`, {
-                    method: 'GET', // GET jest domyślny, ale warto go wpisać
+                const response = await fetch(`https://concerned-sprayless-brandie.ngrok-free.dev/single_orders/by-email?mail=${userMail}`, {
+                    method: 'GET', 
                     headers: {
                         'Accept': 'application/json',
-                        'ngrok-skip-browser-warning': 'true' // OBOWIĄZKOWE dla darmowego ngrok
+                        'ngrok-skip-browser-warning': 'true'
                     }
                 });
 
@@ -48,51 +45,51 @@ export default function OrderHistory(){
 
                 const result = await response.json();
                 setOrders(result);
-                    } catch (err) {
-                        setError("Nie udało się pobrać danych.");
-                        console.error(err);
-                    } finally {
-                        setLoading(false);
-                    }
-                };
+            } catch (err) {
+                setError("Nie udało się pobrać danych.");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-                fetchData();
-            }, []);
-            
-    if(loading) return <p>Ładowanie</p>;
-    if(error) return <p style={{ color: 'red' }}>{error}</p>;   
+        fetchData();
+    }, []);
+
+    if (loading) return <p>Ładowanie</p>;
+    if (error) return <p style={{ color: 'red' }}>{error}</p>;
     let ordersDiv;
-    if(orders.length){
-            ordersDiv = orders.map(o => (
-    <div className="order-card">
-        <div className="order-header">
-            <span className="product-name">{o.productName}</span>
-            <span className={`status-badge ${o.status.toLowerCase()}`}>{o.status}</span>
-        </div>
-        <div className="order-details">
-            <div className="detail-item">
-                <span className="label">Oryginalna cena:</span>
-                <span className="value">{o.originalPrice} zł</span>
+    if (orders.length) {
+        ordersDiv = orders.map(o => (
+            <div className="order-card">
+                <div className="order-header">
+                    <span className="product-name">{o.productName}</span>
+                    <span className={`status-badge ${o.status.toLowerCase()}`}>{o.status}</span>
+                </div>
+                <div className="order-details">
+                    <div className="detail-item">
+                        <span className="label">Oryginalna cena:</span>
+                        <span className="value">{o.originalPrice} zł</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label">Waga:</span>
+                        <span className="value">{o.productWeight} kg</span>
+                    </div>
+                    <div className="detail-item final-price">
+                        <span className="label">Cena Finalna:</span>
+                        <span className="value">{o.finalPrice} zł</span>
+                    </div>
+                    <div className="detail-item remaining">
+                        <span className="label">Do zapłaty:</span>
+                        <span className="value">{o.remainingToPay} zł</span>
+                    </div>
+                </div>
             </div>
-            <div className="detail-item">
-                <span className="label">Waga:</span>
-                <span className="value">{o.productWeight} kg</span>
-            </div>
-            <div className="detail-item final-price">
-                <span className="label">Cena Finalna:</span>
-                <span className="value">{o.finalPrice} zł</span>
-            </div>
-            <div className="detail-item remaining">
-                <span className="label">Do zapłaty:</span>
-                <span className="value">{o.remainingToPay} zł</span>
-            </div>
-        </div>
-    </div>
-));
+        ));
     }
-    else{
+    else {
         ordersDiv = <h3>Nie masz u nas żadnych zamówień</h3>;
-    }    
+    }
     return <div className="order-container">
         <h2>Historia Zamówień</h2>
         {ordersDiv}

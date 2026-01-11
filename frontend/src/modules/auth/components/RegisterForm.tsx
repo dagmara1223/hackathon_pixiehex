@@ -21,12 +21,12 @@ function RegisterForm() {
         }
 
         const registerData = {
-            mail: email, // Zmienione z email na mail, żeby pasowało do Javy
+            mail: email, 
             password: password
         };
 
         try {
-            const response = await fetch('https://unexchangeable-julio-acaroid.ngrok-free.dev/auth/register', {
+            const response = await fetch('https://concerned-sprayless-brandie.ngrok-free.dev/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ function RegisterForm() {
 
             if (response.ok) {
                 alert("Konto założone pomyślnie! Teraz możesz się zalogować.");
-                // Opcjonalnie: przekierowanie do logowania
+
             } else {
                 const data = await response.json();
                 setError(data.message || "Błąd podczas rejestracji.");

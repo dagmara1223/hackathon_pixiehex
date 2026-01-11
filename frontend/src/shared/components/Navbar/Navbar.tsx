@@ -4,7 +4,7 @@ import "./Navbar.css";
 export default function Navbar() {
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-  const userMail = localStorage.getItem("userMail"); // opcjonalnie
+  const userMail = localStorage.getItem("userMail");
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
