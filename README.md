@@ -1,6 +1,6 @@
 # hackathon_pixiehex
 
-We bring local business to global market
+We bring local businesses to global market
 
 International shipping from Korea is often expensive.
 K-Shipping solves this problem by enabling:
