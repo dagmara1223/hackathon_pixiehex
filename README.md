@@ -99,8 +99,10 @@ Backend
 mvn spring-boot:run
 ```
 
-Frontend ```
+Frontend
+```
 npm install
+npm run dev
 ```
 npm run dev
 
