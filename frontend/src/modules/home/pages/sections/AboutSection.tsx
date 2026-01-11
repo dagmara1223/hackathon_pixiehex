@@ -6,6 +6,7 @@ export default function AboutSection() {
     return (
         <section className="about">
             <div className="about__content">
+                <div className="about__box">
                 <h2 className="about__title">W paczce siła!</h2>
 
                 <p>
@@ -35,6 +36,7 @@ export default function AboutSection() {
                     <strong>opłatę platformy (10%)</strong> oraz{" "}
                     <strong>przesyłkę na terenie Polski</strong>.
                 </p>
+                </div>
                 <div className="about__pricing">
                     <h2 className="about__title">Jak zmienia się cena?</h2>
 

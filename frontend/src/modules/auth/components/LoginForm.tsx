@@ -25,10 +25,20 @@ export default function LoginForm() {
                     password: password,
                 })
             });
-
+            
             if (response.ok) {
                 localStorage.setItem("isLoggedIn", "true");
                 localStorage.setItem("userMail", mail);
+
+                
+
+                // fetch('https://.../client', { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                //             .then(res => res.json())
+                //             .then(data => {
+                //                 const user = data.find((c: any) => c.mail === mail);
+                //                 localStorage.setItem("role", user.role);
+                //             });
+
                 navigate("/");
                 return;
             }

@@ -17,7 +17,6 @@
 .about p {
     font-size: 1rem;
     line-height: 1.8;
-    color: #444;
     margin-bottom: 1rem;
 }
 
@@ -41,6 +40,7 @@
     padding: 2rem;
     border-radius: 12px;
     text-align: center;
+    transition: transform 0.3s ease;
 }
 
 .about__card img {
@@ -58,7 +58,6 @@
 
 .about__card p {
     font-size: 0.95rem;
-    color: #555;
 }
 
 .about__card--highlight {
@@ -149,3 +148,12 @@
         grid-template-columns: 1fr;
     }
 }
+
+.about__box{
+    text-align: center;
+    /* padding:40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease; */
+}
+
