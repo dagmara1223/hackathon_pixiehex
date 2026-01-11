@@ -11,7 +11,7 @@ export default function AdminPage(){
         useEffect(() => {
             const fetchData = async () => {
                 try {
-                    const response = await fetch(`https://concerned-sprayless-brandie.ngrok-free.dev/single_orders`, {
+                    const response = await fetch(`http://localhost:8080/single_orders`, {
                         method: 'GET', 
                         headers: {
                             'Accept': 'application/json',

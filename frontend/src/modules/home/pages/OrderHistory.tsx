@@ -31,7 +31,7 @@ export default function OrderHistory() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://concerned-sprayless-brandie.ngrok-free.dev/single_orders/by-email?mail=${userMail}`, {
+                const response = await fetch(`http://localhost:8080/single_orders/by-email?mail=${userMail}`, {
                     method: 'GET', 
                     headers: {
                         'Accept': 'application/json',

@@ -13,7 +13,7 @@ export default function LoginForm() {
         setError("");
 
         try {
-            const response = await fetch('https://concerned-sprayless-brandie.ngrok-free.dev/auth/login', {
+            const response = await fetch('http://localhost:8080/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,15 +31,7 @@ export default function LoginForm() {
                 localStorage.setItem("userMail", mail);
 
 
-
-                // fetch('https://concerned-sprayless-brandie.ngrok-free.dev/client', {
-                //      headers: { 'ngrok-skip-browser-warning': 'true' } })
-                //             .then(res => res.json())
-                //             .then(data => {
-                //                 const user = data.find((c: any) => c.mail === mail);
-                //                 localStorage.setItem("role", user.role);
-                //             });
-                const clientsRes = await fetch('https://concerned-sprayless-brandie.ngrok-free.dev/client', {
+                const clientsRes = await fetch('http://localhost:8080/client', {
                     headers: { 'ngrok-skip-browser-warning': 'true' }
                 });
                 const clientsData = await clientsRes.json();

@@ -38,7 +38,7 @@ export default function Basket() {
         };
 
         const response = await fetch(
-            "https://concerned-sprayless-brandie.ngrok-free.dev/single_orders/bulk",
+            "http://localhost:8080/bulk",
             {
                 method: "POST",
                 headers: {
