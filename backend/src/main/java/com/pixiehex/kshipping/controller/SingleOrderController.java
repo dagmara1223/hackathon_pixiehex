@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/single_orders")
+@RequestMapping("/single_orders") // <--- ZMIANA: Krótszy, standardowy URL
 @CrossOrigin(origins = "*")
 public class SingleOrderController {
 
@@ -28,6 +28,8 @@ public class SingleOrderController {
     @PostMapping
     public ResponseEntity<SingleOrder> createPreorder(@RequestBody Map<String, Object> payload) {
         String name = (String) payload.get("productName");
+
+        // Zabezpieczenie przed rzutowaniem (czasem JSON wysyła integer 50, a java chce double 50.0)
         double price = Double.parseDouble(payload.get("price").toString());
         double weight = payload.containsKey("weight") ? Double.parseDouble(payload.get("weight").toString()) : 0.0;
 
@@ -36,6 +38,24 @@ public class SingleOrderController {
         String phone = (String) payload.get("phoneNumber");
 
         return ResponseEntity.ok(singleOrderService.createPreorder(name, price, weight, email, address, phone));
+    }
+
+    @PatchMapping("/checkout")
+    public ResponseEntity<String> finalizeUserOrders(@RequestBody Map<String, String> payload) {
+        String email = payload.get("userEmail");
+        String address = payload.get("shippingAddress");
+        String phone = payload.get("phoneNumber");
+
+        if (email == null || address == null) {
+            return ResponseEntity.badRequest().body("Brak maila lub adresu!");
+        }
+
+        try {
+            singleOrderService.updateContactDetailsForOpenOrders(email, address, phone);
+            return ResponseEntity.ok("Zaktualizowano dane dostawy dla produktów w koszyku.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -65,7 +85,6 @@ public class SingleOrderController {
         if (request.getUserEmail() == null || request.getItems() == null || request.getItems().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-
         List<SingleOrder> createdOrders = singleOrderService.createBulkOrders(request);
         return ResponseEntity.ok(createdOrders);
     }

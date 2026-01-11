@@ -15,6 +15,8 @@ public class SingleOrderService {
 
     private final SingleOrderRepository orderRepository;
 
+    // Te stałe są używane tylko w awaryjnym trybie closeCycle.
+    // Główna logika jest w BatchService.
     private static final double SHARED_SHIPPING_COST = 15.00;
     private static final double VAT_RATE = 1.23;
 
@@ -22,18 +24,34 @@ public class SingleOrderService {
         this.orderRepository = orderRepository;
     }
 
+    // --- NOWA METODA DO CHECKOUTU ---
+    @Transactional
+    public void updateContactDetailsForOpenOrders(String email, String address, String phone) {
+        // Pobieramy wszystko co jest OPEN dla tego maila
+        List<SingleOrder> cartItems = orderRepository.findByUserEmailAndStatus(email, OrderStatus.OPEN);
+
+        if (cartItems.isEmpty()) {
+            // Można rzucić błąd albo po prostu nic nie robić (logowanie)
+            System.out.println("Brak otwartych zamówień dla: " + email);
+            return;
+        }
+
+        // Nadpisujemy dane
+        for (SingleOrder item : cartItems) {
+            item.setShippingAddress(address);
+            item.setPhoneNumber(phone);
+        }
+        orderRepository.saveAll(cartItems);
+    }
+
     @Transactional
     public List<SingleOrder> createBulkOrders(CreateOrderRequest request) {
         List<SingleOrder> savedOrders = new java.util.ArrayList<>();
-
-        // Teraz iterujemy po BulkProductDTO
         for (com.pixiehex.kshipping.dto.BulkProductDTO item : request.getItems()) {
-
             SingleOrder order = new SingleOrder();
-            order.setProductName(item.getProductName()); // Pobieramy z DTO
+            order.setProductName(item.getProductName());
             order.setOriginalPrice(item.getPrice());
-            order.setProductWeight(item.getWeight()); // Ważne!
-
+            order.setProductWeight(item.getWeight());
             order.setUserEmail(request.getUserEmail());
             order.setShippingAddress(request.getShippingAddress());
             order.setPhoneNumber(request.getPhoneNumber());
@@ -41,28 +59,26 @@ public class SingleOrderService {
             double deposit = item.getPrice() * 0.30;
             order.setDepositAmount(deposit);
             order.setRemainingToPay(0);
-
             order.setStatus(OrderStatus.OPEN);
             order.setOrderDate(LocalDateTime.now());
 
             savedOrders.add(orderRepository.save(order));
         }
-
         return savedOrders;
     }
 
     public SingleOrder createPreorder(String productName, double price, double weight, String userEmail, String shippingAddress, String phoneNumber) {
-
         double deposit = price * 0.30;
 
         SingleOrder order = new SingleOrder();
         order.setProductName(productName);
         order.setUserEmail(userEmail);
-        order.setShippingAddress(shippingAddress); // <--- Zapisujemy adres
+        order.setShippingAddress(shippingAddress);
         order.setOriginalPrice(price);
-        order.setProductWeight(weight); // Zakładam, że wagę też przesyłasz
+        order.setProductWeight(weight);
         order.setDepositAmount(deposit);
         order.setPhoneNumber(phoneNumber);
+
         order.setRemainingToPay(0);
         order.setStatus(OrderStatus.OPEN);
         order.setOrderDate(LocalDateTime.now());
@@ -77,26 +93,24 @@ public class SingleOrderService {
         if (order.getStatus() != OrderStatus.OPEN) {
             throw new IllegalStateException("Za późno! Preorder zamknięty. Zaliczka przepadła.");
         }
-
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
     }
 
     @Transactional
     public List<SingleOrder> closeCycleAndCalculateCosts() {
+        // TO JEST PROSTA LOGIKA. PAMIĘTAJ, ŻE BatchService MA LEPSZĄ.
         List<SingleOrder> openOrders = orderRepository.findByStatus(OrderStatus.OPEN);
 
         for (SingleOrder order : openOrders) {
             double baseTotal = order.getOriginalPrice() + SHARED_SHIPPING_COST;
             double totalWithTax = baseTotal * VAT_RATE;
-
             double remaining = totalWithTax - order.getDepositAmount();
 
             order.setFinalPrice(Math.round(totalWithTax * 100.0) / 100.0);
             order.setRemainingToPay(Math.round(remaining * 100.0) / 100.0);
             order.setStatus(OrderStatus.LOCKED);
         }
-
         return orderRepository.saveAll(openOrders);
     }
 
@@ -105,43 +119,14 @@ public class SingleOrderService {
     }
 
     public List<SingleOrder> getOrdersByUserEmail(String userEmail) {
-        return orderRepository.findByUserEmail(userEmail);
-    }
-
-    public void changeUnpaidToCancelled(){
-
-        List<SingleOrder> lockedOrders = orderRepository.findByStatus(SingleOrder.OrderStatus.LOCKED);
-
-        // Update status to CANCELLED
-        for (SingleOrder order : lockedOrders) {
-            order.setStatus(SingleOrder.OrderStatus.CANCELLED);
-        }
-
-        // Save all updated orders
-        orderRepository.saveAll(lockedOrders);
-
-        System.out.println("Updated " + lockedOrders.size() + " orders from LOCKED to CANCELLED.");
-    }
-
-    public void changeToLocked(){
-
-        List<SingleOrder> lockedOrders = orderRepository.findByStatus(SingleOrder.OrderStatus.OPEN);
-
-        // Update status to CANCELLED
-        for (SingleOrder order : lockedOrders) {
-            order.setStatus(SingleOrder.OrderStatus.LOCKED);
-        }
-
-        // Save all updated orders
-        orderRepository.saveAll(lockedOrders);
-
-        System.out.println("Updated " + lockedOrders.size() + " orders from OPEN to LOCKED.");
+        // Używamy metody sortującej, żeby najnowsze były u góry
+        // Upewnij się, że masz tę metodę w Repository!
+        return orderRepository.findByUserEmailContainingIgnoreCaseOrderByOrderDateDesc(userEmail);
     }
 
     public SingleOrder markOrderAsPaid(Long orderId) {
         SingleOrder order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
-
         order.setStatus(SingleOrder.OrderStatus.PAID);
         return orderRepository.save(order);
     }
