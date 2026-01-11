@@ -33,7 +33,7 @@ public class AuthController {
         }
 
         client.setPassword(passwordEncoder.encode(client.getPassword()));
-        client.setRole(Client.Role.USER); // ✅ default role
+        client.setRole(Client.Role.USER);
 
         clientRepository.save(client);
         return "User registered successfully";
@@ -53,5 +53,7 @@ public class AuthController {
             return ResponseEntity.status(401).body("Invalid email or password");
         }
     }
+
+
 }
 

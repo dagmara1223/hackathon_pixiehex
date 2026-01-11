@@ -114,6 +114,36 @@ public class SingleOrderService {
         return orderRepository.saveAll(openOrders);
     }
 
+    public void changeUnpaidToCancelled(){
+
+        List<SingleOrder> lockedOrders = orderRepository.findByStatus(SingleOrder.OrderStatus.LOCKED);
+
+        // Update status to CANCELLED
+        for (SingleOrder order : lockedOrders) {
+            order.setStatus(SingleOrder.OrderStatus.CANCELLED);
+        }
+
+        // Save all updated orders
+        orderRepository.saveAll(lockedOrders);
+
+        System.out.println("Updated " + lockedOrders.size() + " orders from LOCKED to CANCELLED.");
+    }
+
+    public void changeToLocked(){
+
+        List<SingleOrder> lockedOrders = orderRepository.findByStatus(SingleOrder.OrderStatus.OPEN);
+
+        // Update status to CANCELLED
+        for (SingleOrder order : lockedOrders) {
+            order.setStatus(SingleOrder.OrderStatus.LOCKED);
+        }
+
+        // Save all updated orders
+        orderRepository.saveAll(lockedOrders);
+
+        System.out.println("Updated " + lockedOrders.size() + " orders from OPEN to LOCKED.");
+    }
+
     public List<SingleOrder> getAllOrders() {
         return orderRepository.findAll();
     }
