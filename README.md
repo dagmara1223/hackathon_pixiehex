@@ -95,9 +95,12 @@ Each order receives:
 
 ## How to run
 Backend
+```
 mvn spring-boot:run
+```
 
-Frontend
+Frontend ```
 npm install
+```
 npm run dev
 
