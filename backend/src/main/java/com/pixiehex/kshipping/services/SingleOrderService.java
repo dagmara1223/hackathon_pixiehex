@@ -111,12 +111,10 @@ public class SingleOrderService {
 
         List<SingleOrder> lockedOrders = orderRepository.findByStatus(SingleOrder.OrderStatus.LOCKED);
 
-        // Update status to CANCELLED
         for (SingleOrder order : lockedOrders) {
             order.setStatus(SingleOrder.OrderStatus.CANCELLED);
         }
 
-        // Save all updated orders
         orderRepository.saveAll(lockedOrders);
 
         System.out.println("Updated " + lockedOrders.size() + " orders from LOCKED to CANCELLED.");
@@ -126,12 +124,10 @@ public class SingleOrderService {
 
         List<SingleOrder> lockedOrders = orderRepository.findByStatus(SingleOrder.OrderStatus.OPEN);
 
-        // Update status to CANCELLED
         for (SingleOrder order : lockedOrders) {
             order.setStatus(SingleOrder.OrderStatus.LOCKED);
         }
 
-        // Save all updated orders
         orderRepository.saveAll(lockedOrders);
 
         System.out.println("Updated " + lockedOrders.size() + " orders from OPEN to LOCKED.");
@@ -150,11 +146,5 @@ public class SingleOrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
         order.setStatus(SingleOrder.OrderStatus.PAID);
         return orderRepository.save(order);
-    }
-
-    public void changeToLocked() {
-    }
-
-    public void changeUnpaidToCancelled() {
     }
 }
