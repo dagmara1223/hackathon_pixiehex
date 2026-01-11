@@ -15,22 +15,50 @@ K-Shipping solves this problem by enabling:
 ### Backend
   - Java 21
   - Spring Boot
+  - Spring Data JPA
+  - Spring Security
+  - H2
+  - Scheduled jobs (cron-based)
+  - REST API 
 
 ### Frontend
   - React
   - TypeScript
 
 ## Core features
- - Browse available products
- - Create orders without registration
+### Orders
+- Create orders without registration
+- Store delivery address per order
+- Pay only a deposit initially
+- Get mail about the order status update
  - Add multiple products to a cart
  - Finalize orders with delivery details
- - Track order status via email
  - Individual orders are grouped into group orders
- - Group orders go through shipping stages:
-    - OPEN
-    - ON_THE_WAY
-    - DELIVERED
+  
+  ### SingleOrder
+A `SingleOrder` represents one product ordered by one user.
+
+Each order contains:
+- `productName`
+- `userEmail`
+- `shippingAddress`
+- `productWeight`
+- `originalPrice`
+- `depositAmount`
+- `finalPrice`
+- `remainingToPay`
+- `status`
+- `orderDate`
+
+- 
+### Order Statuses
+- `OPEN`
+- `LOCKED`
+- `PAID`
+- `CANCELLED`
+
+Orders are **identified by email**, not by user ownership.  
+Users can create orders **without registering**.
 
 ## Security
  - Role-based authorization (USER, ADMIN)
@@ -38,6 +66,32 @@ K-Shipping solves this problem by enabling:
  - Admin-only endpoints for management actions
  - Spring Security with endpoint-level access control
  - CORS enabled for frontend integration
+
+# Automated Processing (Scheduling)
+
+The system uses Spring’s scheduler with a weekly cycle:
+
+### Saturday – Lock Orders
+- Locks eligible `OPEN` orders
+
+### Monday – Processing & Cleanup
+- Cancels unpaid `LOCKED` orders
+- Runs batching logic:
+  - Creates group orders
+  - Splits shipping costs
+  - Locks finalized orders
+  - Generates PDFs
+  No manual triggering is required in production.
+
+##  Shipping Cost Distribution
+
+- Shipping price depends on total group weight
+- Cost is split proportionally by weight
+- VAT (23%) is applied
+
+Each order receives:
+- Final price
+- Remaining amount to pay
 
 ## How to run
 Backend
