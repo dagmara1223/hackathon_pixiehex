@@ -7,4 +7,6 @@ import java.util.List;
 public interface SingleOrderRepository extends JpaRepository<SingleOrder, Long> {
     List<SingleOrder> findByStatus(SingleOrder.OrderStatus status);
     List<SingleOrder> findByUserEmail(String userEmail);
+
+    List<SingleOrder> findByUserEmailContainingIgnoreCaseOrderByOrderDateDesc(String userEmail);
 }

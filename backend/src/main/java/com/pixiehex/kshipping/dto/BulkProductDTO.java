@@ -7,6 +7,7 @@ public class BulkProductDTO {
 
     private Double weight;
 
+
     public String getProductName() {
         return productName;
     }
