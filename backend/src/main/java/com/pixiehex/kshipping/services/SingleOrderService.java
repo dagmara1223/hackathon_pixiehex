@@ -26,20 +26,18 @@ public class SingleOrderService {
     public List<SingleOrder> createBulkOrders(CreateOrderRequest request) {
         List<SingleOrder> savedOrders = new java.util.ArrayList<>();
 
-        for (CreateOrderRequest.ProductItem item : request.getItems()) {
+        // Teraz iterujemy po BulkProductDTO
+        for (com.pixiehex.kshipping.dto.BulkProductDTO item : request.getItems()) {
 
-            // Logika tworzenia pojedynczego zamówienia (kopiuj-wklej z createPreorder lub wywołaj tamtą metodę)
             SingleOrder order = new SingleOrder();
-            order.setProductName(item.getProductName());
+            order.setProductName(item.getProductName()); // Pobieramy z DTO
             order.setOriginalPrice(item.getPrice());
-            order.setProductWeight(item.getWeight());
+            order.setProductWeight(item.getWeight()); // Ważne!
 
-            // Przypisujemy dane użytkownika (te same dla każdego produktu)
             order.setUserEmail(request.getUserEmail());
             order.setShippingAddress(request.getShippingAddress());
             order.setPhoneNumber(request.getPhoneNumber());
 
-            // Wyliczamy zaliczkę
             double deposit = item.getPrice() * 0.30;
             order.setDepositAmount(deposit);
             order.setRemainingToPay(0);
