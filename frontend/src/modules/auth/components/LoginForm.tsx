@@ -54,7 +54,6 @@ export default function LoginForm() {
 
     return (
         <div className="auth-container">
-            {/* Dodajemy onSubmit do form */}
             <form className="auth-form" onSubmit={handleSubmit}>
                 <h2>Zaloguj się</h2>
 

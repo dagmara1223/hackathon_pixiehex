@@ -67,7 +67,6 @@
     text-align: center;
 }
 
-/* „ogon” chmurki */
 .slider__bubble::after {
     content: "";
     position: absolute;

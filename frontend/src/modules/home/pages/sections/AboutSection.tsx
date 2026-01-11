@@ -74,7 +74,6 @@ export default function AboutSection() {
                 </div>
 
 
-                {/*co nas wyroznia section */}
                 <div className="about__features">
                     <h2 className="about__title">Co nas wyróżnia?</h2>
 

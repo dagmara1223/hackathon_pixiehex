@@ -1,5 +1,3 @@
-// utils/cart.ts
-
 export type CartProduct = {
     id: number;
     name: string;

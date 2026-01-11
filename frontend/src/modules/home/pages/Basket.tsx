@@ -15,7 +15,7 @@ export default function Basket() {
 
     const handleRemove = (index: number) => {
         removeFromCart(index);
-        setProducts(getCart()); //odswiezanie ui
+        setProducts(getCart()); 
     };
 
     const total = products.reduce((sum, p) => sum + p.price, 0);
