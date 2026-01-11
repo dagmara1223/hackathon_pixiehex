@@ -32,12 +32,19 @@ export default function LoginForm() {
 
 
 
-                // fetch('https://.../client', { headers: { 'ngrok-skip-browser-warning': 'true' } })
+                // fetch('https://concerned-sprayless-brandie.ngrok-free.dev/client', {
+                //      headers: { 'ngrok-skip-browser-warning': 'true' } })
                 //             .then(res => res.json())
                 //             .then(data => {
                 //                 const user = data.find((c: any) => c.mail === mail);
                 //                 localStorage.setItem("role", user.role);
                 //             });
+                const clientsRes = await fetch('https://concerned-sprayless-brandie.ngrok-free.dev/client', {
+                    headers: { 'ngrok-skip-browser-warning': 'true' }
+                });
+                const clientsData = await clientsRes.json();
+                const user = clientsData.find((c: any) => c.mail === mail);
+                localStorage.setItem("role", user.role || "USER");
 
                 navigate("/");
                 return;

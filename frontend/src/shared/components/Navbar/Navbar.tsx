@@ -5,7 +5,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const userMail = localStorage.getItem("userMail");
-
+  const role = localStorage.getItem("role");
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userMail");
@@ -21,11 +21,19 @@ export default function Navbar() {
       <div className="navbar__actions">
         {isLoggedIn ? (
           <>
+            {/* rola: {role} */}
+
             {userMail && (
               <span className="navbar__user">
                 {userMail}
               </span>
             )}
+            {role === "ADMIN" ? (
+            <Link to="/admin" className="navbar__button">
+              Admin Panel
+            </Link>
+            )
+          :<></>}
             <Link to="/orderhistory" className="navbar__button">
             Historia zamówień
             </Link>

@@ -1,63 +1,43 @@
-import { useEffect, useState } from "react";
+import type { Order } from "./OrderHistory";
+import { useState, useEffect } from "react";
 import "./orderhistory.css"
-export type Order = {
-    productName: string,
-    userEmail: string,
-    shippingAddress: string,
-    originalPrice: number,
-    depositAmount: number,
-    status: string,
-    finalPrice: number,
-    groupOrder: {
-        name: string,
-        createdDate: string,
-        id: number,
-        status: string,
-        totalValue: number,
-        totalWeight: number
-    },
-    orderDate: string,
-    orderId: number,
-    productWeight: number,
-    remainingToPay: number
-}
-
-export default function OrderHistory() {
+export default function AdminPage(){
     const [orders, setOrders] = useState<Order[]>([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
-    const userMail = localStorage.getItem("userMail");
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`https://concerned-sprayless-brandie.ngrok-free.dev/single_orders/by-email?mail=${userMail}`, {
-                    method: 'GET', 
-                    headers: {
-                        'Accept': 'application/json',
-                        'ngrok-skip-browser-warning': 'true'
+    if(localStorage.getItem("role") !== "ADMIN"){
+        return <></>;
+    }
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    const response = await fetch(`https://concerned-sprayless-brandie.ngrok-free.dev/single_orders`, {
+                        method: 'GET', 
+                        headers: {
+                            'Accept': 'application/json',
+                            'ngrok-skip-browser-warning': 'true'
+                        }
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error(`Błąd: ${response.status}`);
                     }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Błąd: ${response.status}`);
+    
+                    const result = await response.json();
+                    setOrders(result);
+                } catch (err) {
+                    setError("Nie udało się pobrać danych.");
+                    console.error(err);
+                } finally {
+                    setLoading(false);
                 }
-
-                const result = await response.json();
-                setOrders(result);
-            } catch (err) {
-                setError("Nie udało się pobrać danych.");
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
-
+            };
+    
+            fetchData();
+        }, []);
     if (loading) return <p>Ładowanie</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
+
     let ordersDiv;
     if (orders.length) {
         ordersDiv = orders.map(o => (
@@ -85,13 +65,14 @@ export default function OrderHistory() {
                     </div>
                 </div>
             </div>
-        ));
+        ));}
+    else{
+        ordersDiv = <h3>Nie ma żadnych zamówień</h3>;
     }
-    else {
-        ordersDiv = <h3>Nie masz u nas żadnych zamówień</h3>;
-    }
-    return <div className="order-container">
+    return <div>
+        <div className="order-container">
         <h2>Historia Zamówień</h2>
         {ordersDiv}
-    </div>;
+    </div>
+    </div>
 }

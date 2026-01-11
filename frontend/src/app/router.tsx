@@ -5,6 +5,7 @@ import LoginForm from "../modules/auth/components/LoginForm";
 import RegisterForm from "../modules/auth/components/RegisterForm";
 import Basket from "../modules/home/pages/Basket";
 import OrderHistory from "../modules/home/pages/OrderHistory";
+import AdminPage from "../modules/home/pages/AdminPage";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,8 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginForm /> },
       { path: "register", element: <RegisterForm /> },
       { path: "basket", element: <Basket /> },
-      { path: "orderhistory", element: <OrderHistory /> }
+      { path: "orderhistory", element: <OrderHistory /> },
+      {path: "admin", element: <AdminPage />},
     ],
   },
 ]);
