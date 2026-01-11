@@ -70,7 +70,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "http://localhost:5173",
-                "https://unexchangeable-julio-acaroid.ngrok-free.dev"
+                "https://concerned-sprayless-brandie.ngrok-free.dev"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

@@ -26,7 +26,7 @@ function RegisterForm() {
         };
 
         try {
-            const response = await fetch('https://unexchangeable-julio-acaroid.ngrok-free.dev/auth/register', {
+            const response = await fetch('https://concerned-sprayless-brandie.ngrok-free.dev/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

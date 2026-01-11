@@ -74,7 +74,7 @@ export default function MainForm() {
         const fetchProducts = async () => {
             try {
                 const response = await fetch(
-                    "https://unexchangeable-julio-acaroid.ngrok-free.dev/products",
+                    "https://concerned-sprayless-brandie.ngrok-free.dev/products",
                     {
                         headers: {
                             "ngrok-skip-browser-warning": "true"
@@ -135,7 +135,7 @@ export default function MainForm() {
                 if (!product) continue;
 
                 const response = await fetch(
-                    "https://unexchangeable-julio-acaroid.ngrok-free.dev/single_orders",
+                    "https://concerned-sprayless-brandie.ngrok-free.dev/single_orders",
                     {
                         method: "POST",
                         headers: {
