@@ -32,7 +32,10 @@ export const contactSchema = z.object({
 
     city: z
         .string()
-        .min(2, "Nazwa miasta jest za krótka")
+        .min(2, "Nazwa miasta jest za krótka"),
+    telephone: z
+        .string()
+        .regex(/\d{9}$/, "Telefon musi być 9 cyfrowy")
 });
 
 function extractBrand(productName: string): string {
@@ -66,7 +69,8 @@ export default function MainForm() {
         mail: "",
         address: "",
         postal_code: "",
-        city: ""
+        city: "",
+        telephone: ""
     });
 
     useEffect(() => {
@@ -139,7 +143,11 @@ export default function MainForm() {
                         body: JSON.stringify({
                             productName: product.name,
                             price: product.price,
-                            userEmail: userData.mail
+                            userEmail: userData.mail,
+                            phoneNumber: userData.telephone,
+                            productWeight: product.weight,
+                            shippingAddress: userData.address + ", " + userData.postal_code + " " + userData.city,
+
                         })
                     }
                 );
@@ -151,7 +159,7 @@ export default function MainForm() {
 
             alert("Zamówienie zapisane!");
             setChosenProducts([]);
-            setUserData({ name: "", mail: "", address: "", postal_code: "", city: "" });
+            setUserData({ name: "", mail: "", address: "", postal_code: "", city: "", telephone: "" });
 
         } catch (err) {
             console.error(err);
@@ -223,7 +231,12 @@ export default function MainForm() {
                                     setUserData({ ...userData, name: e.target.value })
                                 }
                             />
-
+                            <label>Numer telefonu</label>
+                            <input type="tel" value={userData.telephone}
+                            onChange={(e)=>{
+                                setUserData({...userData, telephone: e.target.value})
+                            }}>
+                            </input>
                             <label>Email</label>
                             <input
                                 type="email"
