@@ -1,10 +1,10 @@
 package com.pixiehex.kshipping.controller;
 
 import com.pixiehex.kshipping.model.GroupOrder;
-import com.pixiehex.kshipping.model.SingleOrder; // <--- WAŻNY IMPORT DLA PĘTLI
+import com.pixiehex.kshipping.model.SingleOrder; 
 import com.pixiehex.kshipping.repository.GroupOrderRepository;
 import com.pixiehex.kshipping.services.BatchService;
-import com.pixiehex.kshipping.services.FakeEmailService; // <--- WAŻNY IMPORT
+import com.pixiehex.kshipping.services.FakeEmailService;
 import com.pixiehex.kshipping.services.PdfGeneratorService;
 import com.pixiehex.kshipping.services.SingleOrderService;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class BatchController {
     private final BatchService batchService;
     private final GroupOrderRepository groupOrderRepository;
     private final PdfGeneratorService pdfGeneratorService;
-    private final FakeEmailService emailService; // <--- 1. NOWE POLE SERWISU
+    private final FakeEmailService emailService; 
     private final SingleOrderService singleOrderService;
 
     public BatchController(BatchService batchService,
@@ -62,17 +62,14 @@ public class BatchController {
         return groupOrderRepository.findById(id)
                 .map(group -> {
                     try {
-                        // Konwersja Stringa na Enum (np. "ON_THE_WAY")
                         GroupOrder.GroupStatus status = GroupOrder.GroupStatus.valueOf(newStatus);
                         group.setStatus(status);
 
-                        // --- LOGIKA POWIADOMIEŃ (TWÓJ KOD) ---
                         if (status == GroupOrder.GroupStatus.ON_THE_WAY) {
-                            // Powiadamiamy wszystkich w grupie
                             for (SingleOrder order : group.getOrders()) {
                                 emailService.sendEmail(
                                         order.getUserEmail(),
-                                        "🚢 Paczka wypłynęła z Korei!",
+                                        "Paczka wypłynęła z Korei!",
                                         "Twoje zamówienie (" + order.getProductName() + ") jest w drodze do Polski."
                                 );
                             }
@@ -80,12 +77,11 @@ public class BatchController {
                             for (SingleOrder order : group.getOrders()) {
                                 emailService.sendEmail(
                                         order.getUserEmail(),
-                                        "📦 Paczka doręczona!",
+                                        "Paczka doręczona!",
                                         "Dziękujemy za zakupy w K-Shipping. Miłego używania!"
                                 );
                             }
                         }
-                        // ---------------------------------------
 
                         groupOrderRepository.save(group);
                         return ResponseEntity.ok("Status zmieniony na: " + status + ". Powiadomienia wysłane.");

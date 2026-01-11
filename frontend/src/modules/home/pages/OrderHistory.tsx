@@ -32,10 +32,10 @@ export default function OrderHistory() {
         const fetchData = async () => {
             try {
                 const response = await fetch(`https://concerned-sprayless-brandie.ngrok-free.dev/single_orders/by-email?mail=${userMail}`, {
-                    method: 'GET', // GET jest domyślny, ale warto go wpisać
+                    method: 'GET', 
                     headers: {
                         'Accept': 'application/json',
-                        'ngrok-skip-browser-warning': 'true' // OBOWIĄZKOWE dla darmowego ngrok
+                        'ngrok-skip-browser-warning': 'true'
                     }
                 });
 

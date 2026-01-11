@@ -28,21 +28,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // ✅ Enable CORS for React / ngrok
+            
                 .cors(Customizer.withDefaults())
 
-                // ✅ Disable CSRF for REST API
                 .csrf(csrf -> csrf.disable())
 
-                // ✅ Everyone can access everything
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
 
-                // ✅ Required for H2 console
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
 
-                // ❌ Disable default login page
                 .formLogin(form -> form.disable())
 
                 .logout(logout -> logout.permitAll());
@@ -50,19 +46,16 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ✅ Password encoder for register/login
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ Needed for AuthenticationManager in controller
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // ✅ CORS CONFIG — THIS FIXES FETCH()
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();

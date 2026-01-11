@@ -65,7 +65,7 @@ export default function LoginForm() {
                     <input
                         type="email"
                         id="name"
-                        value={mail} // Dodajemy sterowanie wartością
+                        value={mail} 
                         onChange={(e) => setMail(e.target.value)}
                         required
                     />
@@ -75,7 +75,7 @@ export default function LoginForm() {
                     <input
                         type="password"
                         id="password"
-                        value={password} // Dodajemy sterowanie wartością
+                        value={password} 
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />

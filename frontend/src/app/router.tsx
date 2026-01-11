@@ -9,7 +9,7 @@ import OrderHistory from "../modules/home/pages/OrderHistory";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,      // layout z Navbar + Outlet
+    element: <App />, 
     children: [
       { index: true, element: <HomePage /> },
       { path: "login", element: <LoginForm /> },
@@ -20,4 +20,4 @@ const router = createBrowserRouter([
   },
 ]);
 
-export default router; // 
+export default router; 

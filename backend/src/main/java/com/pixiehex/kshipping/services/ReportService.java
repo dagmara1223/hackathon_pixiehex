@@ -13,7 +13,6 @@ public class ReportService {
     private final String REPORT_DIR = "./src/main/resources/reports/";
 
     public ReportService() {
-        // Upewniamy się, że folder istnieje (tak jak w PhotoService)
         Path path = Paths.get(REPORT_DIR);
         if (!Files.exists(path)) {
             try {
@@ -23,16 +22,12 @@ public class ReportService {
             }
         }
     }
-
-    // Metoda zwracająca plik jako ciąg bajtów (tak jak chciałaś)
     public byte[] getReportPdf(String filename) throws IOException {
         Path filePath = Paths.get(REPORT_DIR, filename);
 
         if (!Files.exists(filePath)) {
             throw new IOException("Raport nie istnieje: " + filename);
         }
-
-        // Czytamy prosto z dysku (bo tam PdfGenerator go zapisał)
         return Files.readAllBytes(filePath);
     }
 }

@@ -15,8 +15,6 @@ public class SingleOrderService {
 
     private final SingleOrderRepository orderRepository;
 
-    // Te stałe są używane tylko w awaryjnym trybie closeCycle.
-    // Główna logika jest w BatchService.
     private static final double SHARED_SHIPPING_COST = 15.00;
     private static final double VAT_RATE = 1.23;
 
@@ -24,19 +22,15 @@ public class SingleOrderService {
         this.orderRepository = orderRepository;
     }
 
-    // --- NOWA METODA DO CHECKOUTU ---
     @Transactional
     public void updateContactDetailsForOpenOrders(String email, String address, String phone) {
-        // Pobieramy wszystko co jest OPEN dla tego maila
         List<SingleOrder> cartItems = orderRepository.findByUserEmailAndStatus(email, OrderStatus.OPEN);
 
         if (cartItems.isEmpty()) {
-            // Można rzucić błąd albo po prostu nic nie robić (logowanie)
             System.out.println("Brak otwartych zamówień dla: " + email);
             return;
         }
 
-        // Nadpisujemy dane
         for (SingleOrder item : cartItems) {
             item.setShippingAddress(address);
             item.setPhoneNumber(phone);
@@ -99,7 +93,6 @@ public class SingleOrderService {
 
     @Transactional
     public List<SingleOrder> closeCycleAndCalculateCosts() {
-        // TO JEST PROSTA LOGIKA. PAMIĘTAJ, ŻE BatchService MA LEPSZĄ.
         List<SingleOrder> openOrders = orderRepository.findByStatus(OrderStatus.OPEN);
 
         for (SingleOrder order : openOrders) {
@@ -119,8 +112,6 @@ public class SingleOrderService {
     }
 
     public List<SingleOrder> getOrdersByUserEmail(String userEmail) {
-        // Używamy metody sortującej, żeby najnowsze były u góry
-        // Upewnij się, że masz tę metodę w Repository!
         return orderRepository.findByUserEmailContainingIgnoreCaseOrderByOrderDateDesc(userEmail);
     }
 

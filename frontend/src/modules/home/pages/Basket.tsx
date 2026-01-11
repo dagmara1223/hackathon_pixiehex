@@ -29,7 +29,7 @@ export default function Basket() {
     }
     const sendBulkOrder = async () => {
         const payload = {
-            userEmail: "test@mail.com", // docelowo z auth
+            userEmail: "test@mail.com", 
             products: products.map(p => ({
                 productId: p.id,
                 name: p.name,
@@ -124,10 +124,10 @@ export default function Basket() {
                                         clearCart();
                                         setProducts([]);
 
-                                        alert("✅ Zaliczka opłacona. Zamówienie zapisane!");
+                                        alert(" Zaliczka opłacona. Zamówienie zapisane!");
                                         setShowDepositModal(false);
                                     } catch (e) {
-                                        alert("❌ Błąd zapisu zamówienia. Spróbuj ponownie.");
+                                        alert(" Błąd zapisu zamówienia. Spróbuj ponownie.");
                                         console.error(e);
                                     } finally {
                                         setIsPaying(false);

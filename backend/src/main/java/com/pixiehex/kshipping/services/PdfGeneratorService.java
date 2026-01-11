@@ -16,12 +16,9 @@ import java.util.stream.Collectors;
 @Service
 public class PdfGeneratorService {
 
-    // ZMIANA: Ścieżka celuje wprost w Twoje źródła w projekcie.
-    // Dzięki temu pliki pojawią się w IntelliJ w folderze resources.
     private static final String REPORT_DIR = "./src/main/resources/reports/";
 
     public PdfGeneratorService() {
-        // Tworzymy katalog, jeśli nie istnieje
         File directory = new File(REPORT_DIR);
         if (!directory.exists()) {
             directory.mkdirs();
@@ -30,7 +27,6 @@ public class PdfGeneratorService {
 
     public void generateVendorPdf(GroupOrder group) {
         try {
-            // Generowanie nazwy
             String filename = REPORT_DIR + "VENDOR_" + group.getName().replace(" ", "_") + ".pdf";
 
             Document document = new Document();
@@ -38,14 +34,12 @@ public class PdfGeneratorService {
 
             document.open();
 
-            // Nagłówek
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
             document.add(new Paragraph("ORDER FOR VENDOR (KOREA)", titleFont));
             document.add(new Paragraph("Batch: " + group.getName()));
             document.add(new Paragraph("Date: " + group.getCreatedDate().toString()));
             document.add(new Paragraph(" "));
 
-            // Tabela
             PdfPTable table = new PdfPTable(2);
             addTableHeader(table, "Product Name", "Quantity");
 
@@ -62,7 +56,7 @@ public class PdfGeneratorService {
             document.add(new Paragraph("Please ship to: K-Shipping Hub, Seoul, Warehouse 42."));
 
             document.close();
-            System.out.println("✅ Wygenerowano PDF dla Vendora: " + filename);
+            System.out.println("Wygenerowano PDF dla Vendora: " + filename);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +93,7 @@ public class PdfGeneratorService {
 
             document.add(table);
             document.close();
-            System.out.println("✅ Wygenerowano PDF wewnętrzny: " + filename);
+            System.out.println("Wygenerowano PDF wewnętrzny: " + filename);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,21 +113,17 @@ public class PdfGeneratorService {
         try {
             String filename = REPORT_DIR + "LABELS_" + group.getName().replace(" ", "_") + ".pdf";
 
-            // Format A6 (typowy dla etykiet) lub A4
             Document document = new Document(PageSize.A4);
             PdfWriter.getInstance(document, new FileOutputStream(filename));
 
             document.open();
 
             for (SingleOrder order : group.getOrders()) {
-                // Nowa strona dla każdego klienta
                 document.newPage();
 
-                // --- RAMKA ETYKIETY (Rysujemy tabelą) ---
                 PdfPTable labelTable = new PdfPTable(1);
                 labelTable.setWidthPercentage(100);
 
-                // --- SEKCJA GÓRNA: KURIER ---
                 PdfPCell header = new PdfPCell();
                 header.setBorderWidth(2);
                 header.setPadding(10);
@@ -141,7 +131,6 @@ public class PdfGeneratorService {
                 header.addElement(new Paragraph("PRIORITY / LOTNICZA", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
                 labelTable.addCell(header);
 
-                // --- SEKCJA: ADRESAT ---
                 PdfPCell addressCell = new PdfPCell();
                 addressCell.setPadding(15);
                 addressCell.addElement(new Paragraph("ODBIORCA:", FontFactory.getFont(FontFactory.HELVETICA, 10)));
@@ -169,7 +158,7 @@ public class PdfGeneratorService {
             }
 
             document.close();
-            System.out.println("✅ Wygenerowano etykiety: " + filename);
+            System.out.println(" Wygenerowano etykiety: " + filename);
 
         } catch (Exception e) {
             e.printStackTrace();
