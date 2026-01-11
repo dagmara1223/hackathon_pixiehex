@@ -9,6 +9,8 @@ public interface SingleOrderRepository extends JpaRepository<SingleOrder, Long> 
     List<SingleOrder> findByUserEmail(String userEmail);
 
     List<SingleOrder> findByUserEmailContainingIgnoreCaseOrderByOrderDateDesc(String userEmail);
-
-    List<SingleOrder> findByUserEmailAndStatus(String email, SingleOrder.OrderStatus orderStatus);
+    List<SingleOrder> findByUserEmailAndStatus(
+            String userEmail,
+            SingleOrder.OrderStatus status
+    );
 }

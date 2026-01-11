@@ -15,7 +15,7 @@ export default function Basket() {
 
     const handleRemove = (index: number) => {
         removeFromCart(index);
-        setProducts(getCart()); //odswiezanie ui
+        setProducts(getCart()); 
     };
 
     const total = products.reduce((sum, p) => sum + p.price, 0);
@@ -24,10 +24,39 @@ export default function Basket() {
         return (
             <div>
                 <h1>Twój koszyk</h1>
-                <h3>🛒 Koszyk jest pusty</h3>
             </div>
         );
     }
+    const sendBulkOrder = async () => {
+        const payload = {
+            userEmail: "test@mail.com", 
+            products: products.map(p => ({
+                productId: p.id,
+                name: p.name,
+                price: p.price
+            }))
+        };
+
+        const response = await fetch(
+            "https://concerned-sprayless-brandie.ngrok-free.dev/single_orders/bulk",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error("BACKEND RESPONSE:", text);
+            throw new Error(text);
+        }
+
+    };
+
 
     return (
         <div>
@@ -88,18 +117,23 @@ export default function Basket() {
                                 onClick={async () => {
                                     setIsPaying(true);
 
-                                    setTimeout(() => {
-                                        setDepositPaid(true);
+                                    try {
+                                        await sendBulkOrder();
 
+                                        setDepositPaid(true);
                                         clearCart();
                                         setProducts([]);
 
+                                        alert(" Zaliczka opłacona. Zamówienie zapisane!");
                                         setShowDepositModal(false);
+                                    } catch (e) {
+                                        alert(" Błąd zapisu zamówienia. Spróbuj ponownie.");
+                                        console.error(e);
+                                    } finally {
                                         setIsPaying(false);
-
-                                        alert("✅ Zaliczka opłacona. Rezerwacja zapisana!");
-                                    }, 1200);
+                                    }
                                 }}
+
                             >
                                 {isPaying ? "Przetwarzanie..." : "Zapłać 40 zł"}
                             </button>

@@ -137,15 +137,12 @@ public class BatchService {
 
             double remaining = totalWithTax - order.getDepositAmount();
 
-            // --- 2. ZAPIS DO BAZY ---
             order.setFinalPrice(Math.round(totalWithTax * 100.0) / 100.0);
             order.setRemainingToPay(Math.round(remaining * 100.0) / 100.0);
-            order.setStatus(OrderStatus.ACCEPT); // Blokujemy edycję
+            order.setStatus(OrderStatus.ACCEPT); 
 
-            // --- 3. WYSYŁAMY FEJKOWEGO MAILA (Twoja część) ---
-            String subject = "🔔 K-Shipping: Dopłata do zamówienia (Batch " + batch.getId() + ")";
+            String subject = "K-Shipping: Dopłata do zamówienia (Batch " + batch.getId() + ")";
 
-            // Używam zmiennych z obiektu (order.getRemainingToPay), bo są już zaokrąglone
             String body = String.format(
                     "Cześć! Twoja grupa zebrała się sukcesem.\n" +
                             "Produkt: %s\n" +
@@ -157,7 +154,6 @@ public class BatchService {
                     order.getOrderId()
             );
 
-            // Wywołujemy FakeService
             emailService.sendEmail(order.getUserEmail(), subject, body);
         }
     }

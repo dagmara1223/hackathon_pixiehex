@@ -7,7 +7,7 @@ export default function App() {
     <>
       <Navbar />
       <main>
-        <Outlet /> {/* Tu wskoczy HomePage ze Sliderem LUB LoginPage */}
+        <Outlet /> 
       </main>
     </>
   );

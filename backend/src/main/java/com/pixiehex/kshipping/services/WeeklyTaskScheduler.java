@@ -21,7 +21,6 @@ public class WeeklyTaskScheduler {
         singleOrderService.changeToLocked();
     }
 
-    // Every Monday at 00:00
     @Scheduled(cron = "0 0 0 * * MON")
     public void runWeeklyBatching() {
         singleOrderService.changeUnpaidToCancelled();

@@ -69,12 +69,11 @@ export default function MainForm() {
         city: ""
     });
 
-    // fetch
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const response = await fetch(
-                    "https://unexchangeable-julio-acaroid.ngrok-free.dev/products",
+                    "https://concerned-sprayless-brandie.ngrok-free.dev/products",
                     {
                         headers: {
                             "ngrok-skip-browser-warning": "true"
@@ -96,12 +95,10 @@ export default function MainForm() {
         fetchProducts();
     }, []);
 
-    // marki
     const brands = Array.from(
         new Set(products.map(p => extractBrand(p.name)))
     );
 
-    // produkty danej marki
     const filteredProducts = products.filter(
         p => extractBrand(p.name) === chosenBrand
     );
@@ -110,17 +107,14 @@ export default function MainForm() {
         const validation = contactSchema.safeParse(userData);
 
         if (!validation.success) {
-            // Mapujemy błędy Zod na stan Twoich komunikatów w UI
-            //const errorMessages = validation.error.map(err => err.message);
             const pretty = z.prettifyError(validation.error);
             setErrors(pretty);
             return false;
         }
 
-        setErrors(""); // Czyścimy błędy, jeśli wszystko OK
+        setErrors("");
         return true;
     }
-    // submit
     const handleSubmit = async (e: React.FormEvent) => {
 
         e.preventDefault()
@@ -135,7 +129,7 @@ export default function MainForm() {
                 if (!product) continue;
 
                 const response = await fetch(
-                    "https://unexchangeable-julio-acaroid.ngrok-free.dev/single_orders",
+                    "https://concerned-sprayless-brandie.ngrok-free.dev/single_orders",
                     {
                         method: "POST",
                         headers: {
@@ -155,13 +149,13 @@ export default function MainForm() {
                 }
             }
 
-            alert("✅ Zamówienie zapisane!");
+            alert("Zamówienie zapisane!");
             setChosenProducts([]);
             setUserData({ name: "", mail: "", address: "", postal_code: "", city: "" });
 
         } catch (err) {
             console.error(err);
-            alert("❌ Błąd przy zapisie zamówienia");
+            alert("Błąd przy zapisie zamówienia");
         }
     };
 
@@ -170,7 +164,6 @@ export default function MainForm() {
             <div className="order-card">
                 <h2>Zbierz grupę i zamów już teraz!</h2>
 
-                {/* MARKA */}
                 <div className="selection-section">
                     <label>Marka:</label>
                     <select
@@ -189,7 +182,6 @@ export default function MainForm() {
                     </select>
                 </div>
 
-                {/* PRODUKTY */}
                 {chosenBrand && (
                     <div className="selection-section">
                         <label>Wybierz produkty:</label>
@@ -207,7 +199,6 @@ export default function MainForm() {
                     </div>
                 )}
                 {errors && <p style={{ color: 'red' }}>{errors}</p>}
-                {/* FORMULARZ */}
                 {chosenProducts.length > 0 && (
                     <div className="user-details-form">
                         <hr />
